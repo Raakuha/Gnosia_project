@@ -1,0 +1,301 @@
+/* Mengambil font modern dari Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+
+/* Menyimpan variabel warna agar seragam dan mudah diubah */
+:root {
+    --primary: #3b82f6; /* Warna biru utama */
+    --primary-dark: #1d4ed8;
+    --accent: #60a5fa;
+    --bg-main: #f8fafc; /* Warna latar belakang soft */
+    --text-dark: #0f172a;
+    --text-light: #64748b;
+    --white: #ffffff;
+    --shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
+}
+
+/* Reset dasar agar tampilan rapi di semua browser */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Poppins', sans-serif;
+}
+
+body {
+    background-color: var(--bg-main);
+    color: var(--text-dark);
+    line-height: 1.6;
+    overflow-x: hidden; /* Mencegah scroll menyamping */
+}
+
+/* --- KUMPULAN ANIMASI --- */
+/* Animasi memudar dari bawah ke atas */
+@keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(40px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+/* Animasi kedap-kedip untuk teks loading AI */
+@keyframes pulse {
+    0% { opacity: 1; }
+    50% { opacity: 0.4; }
+    100% { opacity: 1; }
+}
+
+/* Class untuk mengaktifkan animasi scroll */
+.animate-up { 
+    animation: fadeInUp 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards; 
+}
+
+/* --- Tampilan Navigasi (Menu Atas) --- */
+nav {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 20px 8%;
+    background: rgba(255, 255, 255, 0.9);
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    box-shadow: 0 2px 15px rgba(0,0,0,0.05);
+}
+
+.logo {
+    font-size: 1.8rem;
+    font-weight: 700;
+    color: var(--primary);
+    text-decoration: none;
+}
+
+/* Desain Tombol */
+.btn {
+    padding: 12px 28px;
+    border-radius: 12px;
+    font-weight: 600;
+    text-decoration: none;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    border: none;
+    display: inline-block;
+}
+
+.btn-primary {
+    background: var(--primary);
+    color: white;
+}
+
+.btn-primary:hover {
+    background: var(--primary-dark);
+    transform: translateY(-3px); /* Efek tombol terangkat saat disentuh kursor */
+    box-shadow: 0 5px 15px rgba(59, 130, 246, 0.3);
+}
+
+.btn-outline {
+    border: 2px solid var(--primary);
+    color: var(--primary);
+    background: transparent;
+}
+
+.btn-outline:hover {
+    background: var(--primary);
+    color: white;
+}
+
+/* --- Tampilan Halaman Login & Register (Layar Terbagi) --- */
+.split-screen {
+    display: flex;
+    min-height: 100vh;
+}
+
+.auth-side {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 40px;
+    background: white;
+}
+
+.brand-side {
+    flex: 1.2;
+    background: linear-gradient(135deg, #3b82f6 0%, #2dd4bf 100%);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 8%;
+    color: white;
+}
+
+.input-box {
+    width: 100%;
+    max-width: 400px;
+    margin-bottom: 15px;
+    text-align: left;
+}
+
+.input-box label {
+    display: block;
+    font-size: 0.85rem;
+    font-weight: 600;
+    margin-bottom: 5px;
+    color: var(--text-light);
+}
+
+.input-box input {
+    width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 2px solid #e2e8f0;
+    outline: none;
+    transition: border-color 0.3s ease; /* Transisi halus */
+}
+
+/* Efek nyala biru saat user mengetik di kotak input */
+.input-box input:focus {
+    border-color: var(--primary);
+}
+
+/* --- Tampilan Kartu Dashboard & Home --- */
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 25px;
+    margin-top: 30px;
+}
+
+.stat-card {
+    background: white;
+    padding: 30px;
+    border-radius: 20px;
+    box-shadow: var(--shadow);
+    transition: 0.4s;
+}
+
+.stat-card:hover {
+    transform: translateY(-5px) scale(1.02); /* Membesar dan terangkat sedikit */
+    box-shadow: 0 15px 35px rgba(0, 0, 0, 0.15);
+}
+
+/* --- MOBILE RESPONSIVE UPDATES --- */
+
+@media (max-width: 768px) {
+    /* 1. Navigasi */
+    nav {
+        padding: 15px 5%;
+        flex-direction: column;
+        gap: 15px;
+        height: auto;
+    }
+
+    /* 2. Hero Section */
+    header {
+        flex-direction: column;
+        padding: 40px 5%;
+        text-align: center;
+        min-height: auto;
+    }
+
+    header h1 {
+        font-size: 2.5rem;
+    }
+
+    /* Search bar di index biar gak mentok */
+    header div[style*="display: flex; gap: 10px; background: white;"] {
+        flex-direction: column;
+        background: transparent !important;
+        box-shadow: none !important;
+        padding: 0 !important;
+    }
+
+    header input#mainSearch {
+        border-radius: 10px !important;
+        padding: 15px !important;
+        box-shadow: var(--shadow);
+        margin-bottom: 10px;
+    }
+
+    /* 3. Grid Kartu */
+    .card-grid {
+        grid-template-columns: 1fr;
+        gap: 20px;
+    }
+
+    /* 4. Split Screen (Login/Register) */
+    .split-screen {
+        flex-direction: column;
+    }
+
+    .brand-side {
+        padding: 40px 20px;
+        min-height: 250px;
+    }
+
+    .brand-side h1 {
+        font-size: 2rem;
+    }
+
+    .auth-side {
+        padding: 40px 20px;
+    }
+
+    /* 5. Gambar/Ilustrasi */
+    img {
+        max-width: 100% !important;
+        height: auto !important;
+    }
+
+    /* 6. Dashboard Banner */
+    div[style*="height: 200px"] {
+        height: auto !important;
+        padding: 20px;
+    }
+
+    div[style*="background: linear-gradient"] h3 {
+        font-size: 1.2rem !important;
+    }
+}
+
+/* --- UPGRADE ANIMASI HOVER (INTERAKTIF) --- */
+
+/* 1. Efek Tombol Bouncy */
+.btn {
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1); /* Bikin animasi lebih mantul */
+}
+.btn-primary:hover {
+    transform: translateY(-5px) scale(1.05); /* Naik lebih tinggi dan membesar 5% */
+    box-shadow: 0 10px 20px rgba(59, 130, 246, 0.4); /* Bayangan makin tebal dan menyebar */
+}
+
+/* 2. Efek Navigasi (Garis Meluncur) */
+nav a {
+    position: relative;
+    transition: color 0.3s ease;
+}
+nav a::after {
+    content: '';
+    position: absolute;
+    width: 0;
+    height: 2px;
+    bottom: -4px;
+    left: 0;
+    background-color: var(--primary);
+    transition: width 0.3s ease;
+}
+nav a:not(.btn):not(.logo):hover::after {
+    width: 100%; /* Garis biru meluncur dari kiri ke kanan */
+}
+nav a:not(.btn):not(.logo):hover {
+    color: var(--primary) !important;
+}
+
+/* 3. Efek Gambar Zoom di dalam Stat Card */
+.stat-card {
+    overflow: hidden !important; /* Mencegah gambar meluber keluar saat membesar */
+}
+.stat-card img {
+    transition: transform 0.5s ease; /* Transisi zoom yang sangat halus */
+}
+.stat-card:hover img {
+    transform: scale(1.1); /* Gambar nge-zoom 10% ke dalam */
+}

@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Gnosia</title>
+    <link rel="stylesheet" href="Assets/style.css">
+</head>
+<body>
+    <div class="split-screen">
+        <!-- Left Side: Login Form -->
+        <div class="auth-side animate-up">
+            <div style="width: 100%; max-width: 400px;">
+                <h2 style="font-size: 2.2rem; margin-bottom: 8px;">Welcome Back</h2>
+                <p style="color: var(--text-light); margin-bottom: 30px;">Please enter your details to sign in.</p>
+                
+                <form onsubmit="handleAuth(event)">
+                    <div class="input-box">
+                        <label>Email Address</label>
+                        <input type="email" placeholder="name@example.com" required>
+                    </div>
+                    
+                    <div class="input-box" style="margin-bottom: 10px;">
+                        <label>Password</label>
+                        <input type="password" placeholder="••••••••" required>
+                    </div>
+                    
+                    <!-- Link Forgot Password yang kita buat sebelumnya -->
+                    <div style="text-align: right; margin-bottom: 20px;">
+                        <a href="forgot-password.html" style="font-size: 0.85rem; color: var(--text-light); font-weight: 600; text-decoration: none; transition: 0.3s;" onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-light)'">Forgot Password?</a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%;">Sign In</button>
+                </form>
+                
+                <p style="margin-top: 25px; text-align: center; font-size: 0.9rem;">
+                    Don't have an account? <a href="register.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Sign up for free</a>
+                </p>
+            </div>
+        </div>
+        
+        <!-- Right Side: Brand Text -->
+        <div class="brand-side">
+            <h1 style="font-size: 3.5rem; margin-bottom: 20px;">Health Insights at Your Fingertips.</h1>
+            <p style="font-size: 1.2rem; opacity: 0.9;">Join thousands of users who monitor their health with Gnosia.</p>
+        </div>
+    </div>
+    
+    <script src="script/script.js"></script>
+</body>
+</html>

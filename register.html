@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Register | Gnosia</title>
+    <link rel="stylesheet" href="Assets/style.css">
+</head>
+<body>
+    <div class="split-screen">
+        <!-- Left Side: Brand Text -->
+        <div class="brand-side" style="background: linear-gradient(135deg, #10b981 0%, #3b82f6 100%);">
+            <h1 style="font-size: 3.5rem; margin-bottom: 20px;">Start Your Wellness Journey.</h1>
+            <p style="font-size: 1.2rem; opacity: 0.9;">Create an account to get personalized medical guidance and analysis.</p>
+        </div>
+        
+        <!-- Right Side: Register Form -->
+        <div class="auth-side animate-up">
+            <div style="width: 100%; max-width: 400px;">
+                <h2 style="font-size: 2.2rem; margin-bottom: 8px;">Create Account</h2>
+                <p style="color: var(--text-light); margin-bottom: 30px;">Get started for free today.</p>
+                
+                <form onsubmit="handleAuth(event)">
+                    <div class="input-box">
+                        <label>Full Name</label>
+                        <input type="text" placeholder="John Doe" required>
+                    </div>
+                    
+                    <div class="input-box">
+                        <label>Email Address</label>
+                        <input type="email" placeholder="john@example.com" required>
+                    </div>
+                    
+                    <div class="input-box">
+                        <label>Password</label>
+                        <input type="password" placeholder="Create a password" required>
+                    </div>
+                    
+                    <button type="submit" class="btn btn-primary" style="width: 100%; margin-top: 20px;">Create Account</button>
+                </form>
+                
+                <p style="margin-top: 25px; text-align: center; font-size: 0.9rem;">
+                    Already have an account? <a href="loqin.html" style="color: var(--primary); font-weight: 600; text-decoration: none;">Log in here</a>
+                </p>
+            </div>
+        </div>
+    </div>
+    
+    <script src="script/script.js"></script>
+</body>
+</html>
