@@ -31,6 +31,10 @@
             <!-- Search Box -->
             <div style="display: flex; gap: 10px; background: white; padding: 10px; border-radius: 15px; box-shadow: var(--shadow); max-width: 500px;">
                 <input type="text" id="mainSearch" placeholder="Enter your symptoms (e.g., Fever)" style="flex: 1; border: none; padding: 10px; outline: none; font-size: 1rem;">
+                
+                <button onclick="openSymptomPicker()" class="btn btn-outline" style="border-radius:10px; white-space:nowrap;">
+                    🩺 Pick Symptoms
+                </button>
                 <button onclick="handleSearch()" class="btn btn-primary" style="border-radius: 10px;">Analyze Now</button>
             </div>
             
