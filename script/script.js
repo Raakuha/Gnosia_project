@@ -3,7 +3,6 @@
 // ─────────────────────────────────────────────
 const API_URL = "http://127.0.0.1:8000";
 
-
 // ─────────────────────────────────────────────
 // SYMPTOM LIST
 // ─────────────────────────────────────────────
@@ -45,6 +44,9 @@ const ALL_SYMPTOMS = [
 
 let selectedSymptoms = new Set();
 
+// ─────────────────────────────────────────────
+// SYMPTOM PICKER — HELPERS
+// ─────────────────────────────────────────────
 function formatLabel(s) {
   return s.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 }
@@ -213,6 +215,9 @@ function applySymptoms() {
 // Tutup modal dengan ESC
 document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
+// ─────────────────────────────────────────────
+// MAIN SEARCH HANDLER
+// ─────────────────────────────────────────────
 async function handleSearch() {
     const input = document.getElementById('mainSearch').value.trim();
     const resultDiv = document.getElementById('searchResult');
@@ -226,7 +231,7 @@ async function handleSearch() {
     resultDiv.innerHTML = `<span style="display:inline-block; animation:pulse 1.5s infinite; color:var(--text-light);">
         Analyzing "<strong>${input}</strong>" using AI...</span>`;
 
-    // Parse input: pisahkan per koma atau spasi
+    // Parse input: pisahkan per koma
     const symptoms = input.split(/[,]+/).map(s => s.trim().replace(/\s+/g, '_').toLowerCase()).filter(Boolean);
 
     try {
@@ -243,7 +248,7 @@ async function handleSearch() {
         if (!response.ok) throw new Error(`Server error: ${response.status}`);
         const data = await response.json();
 
-        // Render hasil
+        // Render hasil prediksi
         const top1 = data.top_predictions[0];
         const othersHTML = data.top_predictions.slice(1).map(p => `
             <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px solid #f1f5f9;">
@@ -256,7 +261,6 @@ async function handleSearch() {
             <div style="background:white; padding:20px; border-radius:12px; border-left:4px solid var(--primary); box-shadow:var(--shadow); margin-top:15px; text-align:left;">
                 <h4 style="margin-bottom:15px; font-size:1rem; color:var(--text-light);">AI Diagnosis Result</h4>
 
-                <!-- Prediksi Utama -->
                 <div style="margin-bottom:15px;">
                     <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px; font-weight:600;">
                         <span style="color:var(--text-dark); font-size:1rem;">${top1.disease}</span>
@@ -267,11 +271,9 @@ async function handleSearch() {
                     </div>
                 </div>
 
-                <!-- Kemungkinan Lain -->
                 <p style="font-size:0.8rem; color:var(--text-light); font-weight:600; margin-bottom:5px;">OTHER POSSIBILITIES</p>
                 ${othersHTML}
 
-                <!-- Disclaimer -->
                 <p style="font-size:0.75rem; color:#94a3b8; margin-top:15px;">
                     ⚠️ This is an AI prediction, not a medical diagnosis. Please consult a doctor.
                 </p>
@@ -282,6 +284,43 @@ async function handleSearch() {
             </div>
         `;
         resultDiv.classList.add('animate-up');
+
+        // ── Fetch rekomendasi (top1 sudah tersedia di sini) ──
+        try {
+            const recRes = await fetch(`${API_URL}/recommend/${encodeURIComponent(top1.disease)}`);
+            if (recRes.ok) {
+                const rec = await recRes.json();
+                const precHTML = rec.precautions.map(p => `<li>${p}</li>`).join('');
+                const severityColor = rec.severity_label === 'Mild'     ? '#10b981'
+                                    : rec.severity_label === 'Moderate' ? '#f59e0b'
+                                    : '#ef4444';
+
+                resultDiv.innerHTML += `
+                    <div style="background:white; padding:20px; border-radius:12px;
+                        border-left:4px solid ${severityColor}; box-shadow:var(--shadow);
+                        margin-top:12px; text-align:left;">
+                        <h4 style="margin-bottom:10px; font-size:1rem; color:var(--text-dark);">
+                            📋 About ${rec.disease}
+                        </h4>
+                        <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:12px;">
+                            ${rec.description}
+                        </p>
+                        <span style="background:${severityColor}20; color:${severityColor};
+                            padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:600;">
+                            ${rec.severity_label} Severity
+                        </span>
+                        <p style="font-size:0.82rem; font-weight:600; color:var(--text-dark);
+                            margin:12px 0 6px;">🛡️ Precautions:</p>
+                        <ul style="margin-left:18px; font-size:0.82rem; color:var(--text-light); line-height:1.8;">
+                            ${precHTML}
+                        </ul>
+                    </div>
+                `;
+            }
+        } catch (recErr) {
+            // Rekomendasi gagal — prediksi utama tetap tampil normal
+            console.warn('Recommendation not available:', recErr.message);
+        }
 
     } catch (err) {
         resultDiv.innerHTML = `

@@ -10,6 +10,7 @@ import numpy as np
 import os
 import warnings
 warnings.filterwarnings("ignore")
+import pandas as pd
 
 # ─────────────────────────────────────────────
 # App init
@@ -212,3 +213,54 @@ def list_diseases():
         raise HTTPException(status_code=503, detail="Model belum terload")
     diseases = sorted(lr_tfidf.classes_.tolist())
     return {"total": len(diseases), "diseases": diseases}
+
+try:
+    df_desc = pd.read_csv("data/symptom_Description.csv").set_index("Disease")
+    df_prec = pd.read_csv("data/symptom_precaution.csv").set_index("Disease")
+    df_sev  = pd.read_csv("data/Symptom-severity.csv").set_index("Symptom")
+    RECOMMEND_AVAILABLE = True
+    print("Recommendation tables loaded!")
+except Exception as e:
+    RECOMMEND_AVAILABLE = False
+    print(f"Recommendation tables gagal load: {e}")
+
+
+# ── Schema ──
+class RecommendResponse(BaseModel):
+    disease: str
+    description: str
+    precautions: List[str]
+    severity_score: int
+    severity_label: str
+
+
+# ── Endpoint ──
+@app.get("/recommend/{disease}", response_model=RecommendResponse)
+def recommend(disease: str):
+    if not RECOMMEND_AVAILABLE:
+        raise HTTPException(status_code=503, detail="Recommendation data tidak tersedia")
+
+    # Cari disease (case-insensitive)
+    matches = [d for d in df_desc.index if d.lower() == disease.lower()]
+    if not matches:
+        raise HTTPException(status_code=404, detail=f"Penyakit '{disease}' tidak ditemukan")
+
+    d = matches[0]
+
+    description = df_desc.loc[d, "Description"]
+
+    prec_cols = ["Precaution_1", "Precaution_2", "Precaution_3", "Precaution_4"]
+    precautions = [str(df_prec.loc[d, c]) for c in prec_cols if pd.notna(df_prec.loc[d, c])]
+
+    # Severity: ambil dari gejala yang match dengan nama penyakit
+    # (pakai score rata-rata semua gejala di dataset sebagai fallback)
+    avg_severity = int(df_sev["weight"].mean())
+    label = "Mild" if avg_severity <= 3 else "Moderate" if avg_severity <= 5 else "Severe"
+
+    return RecommendResponse(
+        disease=d,
+        description=description,
+        precautions=precautions,
+        severity_score=avg_severity,
+        severity_label=label
+    )
