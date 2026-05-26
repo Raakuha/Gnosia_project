@@ -1,0 +1,42 @@
+Disease,Medicine_1,Medicine_2,Medicine_3,Medicine_4,Notes
+Drug Reaction,Stop the offending drug,Antihistamines (Cetirizine),Corticosteroids (Prednisone),Epinephrine (severe cases),Immediately consult a doctor and discontinue suspected drug
+Malaria,Chloroquine,Artemether-Lumefantrine (Coartem),Primaquine,Paracetamol (for fever),Treatment depends on malaria type; consult doctor for prescription
+Allergy,Antihistamines (Cetirizine/Loratadine),Nasal corticosteroids,Decongestants,Epinephrine (anaphylaxis),Avoid allergen triggers; consult doctor for severe reactions
+Hypothyroidism,Levothyroxine (Synthroid),Liothyronine,Selenium supplements,Vitamin D supplements,Requires lifelong medication; dosage set by doctor
+Psoriasis,Topical corticosteroids,Vitamin D analogues (Calcipotriol),Methotrexate,Biologics (Adalimumab),No cure; treatment focuses on symptom control
+GERD,Omeprazole (Proton pump inhibitor),Ranitidine (H2 blocker),Antacids (Gaviscon),Metoclopramide,Avoid spicy food and lying down after meals
+Chronic cholestasis,Ursodeoxycholic acid (UDCA),Cholestyramine (for itching),Vitamin K supplements,Rifampicin,Requires monitoring by gastroenterologist
+hepatitis A,Supportive care (rest & fluids),Paracetamol (for fever/pain),Antiemetics (for nausea),Vitamin supplements,No specific antiviral; vaccination available for prevention
+Osteoarthristis,Paracetamol,NSAIDs (Ibuprofen/Naproxen),Topical Diclofenac gel,Glucosamine supplements,Exercise and weight management are key; avoid excessive joint stress
+(vertigo) Paroymsal  Positional Vertigo,Meclizine (Antivert),Dimenhydrinate (Dramamine),Betahistine,Epley maneuver (physical therapy),Epley maneuver often resolves BPPV without medication
+Hypoglycemia,Glucose tablets,Fruit juice or sugary drink,Glucagon injection (severe),Dextrose IV (hospital),Eat immediately; if unconscious call emergency services
+Acne,Benzoyl peroxide,Salicylic acid,Topical retinoids (Tretinoin),Antibiotics (Doxycycline),Keep skin clean; avoid squeezing pimples
+Diabetes,Metformin,Insulin therapy,Glipizide/Glibenclamide,SGLT2 inhibitors (Empagliflozin),Requires lifestyle changes; regular blood sugar monitoring essential
+Impetigo,Topical Mupirocin (Bactroban),Oral Amoxicillin-Clavulanate,Cefalexin,Topical Fusidic acid,Keep affected area clean and covered; highly contagious
+Hypertension,Amlodipine,Lisinopril (ACE inhibitor),Hydrochlorothiazide,Losartan (ARB),Lifestyle changes (low salt diet + exercise) alongside medication
+Peptic ulcer diseae,Omeprazole (PPI),Amoxicillin + Clarithromycin (H.pylori),Antacids (Aluminum hydroxide),Sucralfate,Avoid NSAIDs and alcohol; treat H. pylori if present
+Dimorphic hemorrhoids(piles),Fiber supplements (Psyllium),Topical hydrocortisone cream,Sitz bath,Surgical treatment (severe),Increase water and fiber intake; avoid straining
+Common Cold,Paracetamol/Ibuprofen,Decongestants (Pseudoephedrine),Antihistamines (Chlorphenamine),Vitamin C supplements,Rest and hydration; antibiotics not effective for viral cold
+Chicken pox,Acyclovir (antiviral),Calamine lotion (for itching),Paracetamol (for fever),Antihistamines,Avoid Aspirin in children; vaccination available
+Cervical spondylosis,NSAIDs (Ibuprofen/Naproxen),Muscle relaxants (Cyclobenzaprine),Physiotherapy,Cervical collar,Exercise and posture correction are important
+Hyperthyroidism,Methimazole (Tapazole),Propylthiouracil (PTU),Beta-blockers (Propranolol),Radioactive iodine therapy,Requires specialist (endocrinologist) management
+Urinary tract infection,Trimethoprim-Sulfamethoxazole,Nitrofurantoin,Ciprofloxacin,Amoxicillin-Clavulanate,Drink plenty of water; complete full antibiotic course
+Varicose veins,Compression stockings,Sclerotherapy,Laser treatment,Surgical stripping,Elevate legs when resting; avoid prolonged standing
+AIDS,Antiretroviral therapy (ART),Tenofovir + Emtricitabine,Efavirenz/Dolutegravir,Prophylactic antibiotics (co-trimoxazole),No cure; ART controls virus and extends life; regular CD4 count monitoring
+Paralysis (brain hemorrhage),Aspirin (ischemic stroke),Alteplase tPA (clot-busting),Antihypertensives,Physiotherapy/Rehabilitation,Emergency treatment required; outcomes depend on speed of care
+Typhoid,Azithromycin,Ciprofloxacin,Ceftriaxone,Cefixime,Complete full antibiotic course; vaccination available
+Hepatitis B,Tenofovir,Entecavir,Pegylated Interferon alfa,Lamivudine,Vaccination available; treatment depends on viral load
+Fungal infection,Clotrimazole (topical),Fluconazole (oral),Terbinafine,Ketoconazole shampoo,Keep affected area dry; complete full antifungal course
+Hepatitis C,Sofosbuvir + Daclatasvir,Ledipasvir + Sofosbuvir,Ribavirin,Pegylated Interferon,Highly curable with modern antivirals; consult hepatologist
+Migraine,Sumatriptan (triptan),Ibuprofen/Naproxen,Paracetamol + Caffeine,Topiramate (preventive),Rest in dark quiet room; identify and avoid triggers
+Bronchial Asthma,Salbutamol inhaler (reliever),Budesonide inhaler (preventer),Montelukast,Prednisolone (acute attack),Always carry reliever inhaler; avoid triggers like dust and smoke
+Alcoholic hepatitis,Corticosteroids (Prednisolone),Pentoxifylline,Thiamine (Vitamin B1),Nutritional supplements,Complete alcohol abstinence is essential; specialist care required
+Jaundice,Treat underlying cause,Ursodeoxycholic acid,IV fluids,Liver support supplements,Jaundice is a symptom not a disease; diagnosis of cause is critical
+Hepatitis E,Supportive care (rest & fluids),Ribavirin (immunocompromised),Paracetamol (fever/pain),Antiemetics,Usually self-limiting; avoid alcohol; safe water and food hygiene
+Dengue,Paracetamol (for fever — NOT Aspirin/Ibuprofen),Oral rehydration salts (ORS),IV fluids (severe),Platelet transfusion (if very low),Avoid NSAIDs; monitor platelet count; no specific antiviral
+Hepatitis D,Pegylated Interferon alfa,Tenofovir,Supportive care,Liver transplant (end-stage),Only occurs with Hepatitis B; Hep B vaccination prevents Hep D
+Heart attack,Aspirin (immediately),Nitroglycerin,Thrombolytics (tPA),Beta-blockers (Metoprolol),EMERGENCY — call ambulance immediately; time is critical
+Pneumonia,Amoxicillin,Azithromycin,Levofloxacin,Paracetamol + rest,Severe cases require hospitalization; vaccination available
+Arthritis,NSAIDs (Ibuprofen/Naproxen),Methotrexate (RA),Hydroxychloroquine,Corticosteroids,Physiotherapy and exercise important; type of arthritis determines treatment
+Gastroenteritis,Oral rehydration salts (ORS),Zinc supplements,Loperamide (diarrhea),Ondansetron (nausea/vomiting),Rest and hydration are key; avoid dairy temporarily
+Tuberculosis,Isoniazid + Rifampicin + Pyrazinamide + Ethambutol,Streptomycin,Pyridoxine (Vitamin B6),Directly Observed Therapy (DOT),6-month treatment course must be completed; drug resistance is a concern

@@ -12,11 +12,26 @@
     <nav>
         <a href="index.html" class="logo">Gnosia</a>
         <div style="display: flex; gap: 20px; align-items: center;">
-            <a href="gfit.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Gfit</a>
-            <a href="health-store.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Health Store</a>
+            <a href="index.html" style="text-decoration: none; color: var(--primary); font-weight: 600; border-bottom: 2px solid var(--primary); padding-bottom: 2px;">Home</a>
+
+            <!-- Dashboard: hanya muncul saat sudah login, di kiri Gfit -->
+            <a href="dashboard.html" id="nav-dashboard" style="display: none; text-decoration: none; color: var(--text-dark); font-weight: 600;">Dashboard</a>
+
+            <!-- Link Gfit & Health Store: cek login dulu -->
+            <a href="#" onclick="guardedNav(event, 'gfit.html')" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Gfit</a>
+            <a href="#" onclick="guardedNav(event, 'health-store.html')" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Health Store</a>
             
-            <a href="loqin.html" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.9rem;">Sign In</a>
-            <a href="register.html" class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem;">Join Now</a>
+            <!-- Tampil kalau BELUM login -->
+            <div id="nav-guest" style="display: flex; gap: 10px; align-items: center;">
+                <a href="loqin.html" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.9rem;">Sign In</a>
+                <a href="register.html" class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem;">Join Now</a>
+            </div>
+
+            <!-- Tampil kalau SUDAH login -->
+            <div id="nav-user" style="display: none; gap: 15px; align-items: center;">
+                <span style="font-weight: 600;" id="greetUserIndex">Hello, User!</span>
+                <button onclick="handleLogout()" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.8rem;">Log Out</button>
+            </div>
         </div>
     </nav>
 
@@ -31,7 +46,6 @@
             <!-- Search Box -->
             <div style="display: flex; gap: 10px; background: white; padding: 10px; border-radius: 15px; box-shadow: var(--shadow); max-width: 500px;">
                 <input type="text" id="mainSearch" placeholder="Enter your symptoms (e.g., Fever)" style="flex: 1; border: none; padding: 10px; outline: none; font-size: 1rem;">
-                
                 <button onclick="openSymptomPicker()" class="btn btn-outline" style="border-radius:10px; white-space:nowrap;">
                     🩺 Pick Symptoms
                 </button>
@@ -58,7 +72,6 @@
         </div>
 
         <div class="card-grid">
-            <!-- Step 1 -->
             <div class="stat-card animate-up" style="text-align: center; box-shadow: var(--shadow);">
                 <img src="https://cdn3d.iconscout.com/3d/premium/thumb/medical-report-4993175-4161821.png" alt="Step 1" style="width: 120px; height: 120px; margin-bottom: 20px; object-fit: contain;">
                 <div style="background: #e0f2fe; color: var(--primary); padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 15px;">Step 1</div>
@@ -66,7 +79,6 @@
                 <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 10px;">Tell us what you are feeling right now in the search box.</p>
             </div>
             
-            <!-- Step 2 -->
             <div class="stat-card animate-up" style="text-align: center; animation-delay: 0.1s; box-shadow: var(--shadow);">
                 <img src="https://cdn3d.iconscout.com/3d/premium/thumb/artificial-intelligence-5379899-4498361.png" alt="Step 2" style="width: 120px; height: 120px; margin-bottom: 20px; object-fit: contain;">
                 <div style="background: #e0f2fe; color: var(--primary); padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 15px;">Step 2</div>
@@ -74,7 +86,6 @@
                 <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 10px;">Our machine learning model analyzes your data securely.</p>
             </div>
 
-            <!-- Step 3 -->
             <div class="stat-card animate-up" style="text-align: center; animation-delay: 0.2s; box-shadow: var(--shadow);">
                 <img src="https://cdn3d.iconscout.com/3d/premium/thumb/doctor-consultation-4993181-4161827.png" alt="Step 3" style="width: 120px; height: 120px; margin-bottom: 20px; object-fit: contain;">
                 <div style="background: #e0f2fe; color: var(--primary); padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 15px;">Step 3</div>
@@ -84,6 +95,73 @@
         </div>
     </section>
 
+    <!-- Platform Footer -->
+    <footer class="hs-platform-footer">
+        <div class="hs-footer-grid">
+            <div class="hs-footer-brand">
+                <span class="logo-text">Gnosia</span>
+                <p>Empowering your health through smart technology, trusted products, and personalized care on one integrated platform.</p>
+            </div>
+            <div class="hs-footer-col">
+                <h4>Platform</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="health-store.html">Health Store</a></li>
+                    <li><a href="gfit.html">Gfit</a></li>
+                </ul>
+            </div>
+            <div class="hs-footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Partners</a></li>
+                </ul>
+            </div>
+            <div class="hs-footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Medical Disclaimer</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="hs-footer-bottom">&copy; 2026 Gnosia Team. All rights reserved.</div>
+    </footer>
+
     <script src="script/script.js"></script>
+    <script>
+        // Fungsi navigasi dengan cek login
+        function guardedNav(event, page) {
+            event.preventDefault();
+            if (localStorage.getItem("isLoggedIn")) {
+                window.location.href = page;
+            } else {
+                // Simpan tujuan, lalu arahkan ke login
+                localStorage.setItem("redirectAfterLogin", page);
+                window.location.href = "loqin.html";
+            }
+        }
+
+        // Cek status login dan update navbar
+        const isLoggedIn = localStorage.getItem("isLoggedIn");
+        const navGuest   = document.getElementById("nav-guest");
+        const navUser    = document.getElementById("nav-user");
+
+        if (isLoggedIn) {
+            navGuest.style.display = "none";
+            navUser.style.display  = "flex";
+            document.getElementById("nav-dashboard").style.display = "block";
+            const email = localStorage.getItem("userEmail");
+            if (email) {
+                const name = email.split("@")[0];
+                document.getElementById("greetUserIndex").textContent = "Hello, " + name + "!";
+            }
+        }
+    </script>
 </body>
 </html>

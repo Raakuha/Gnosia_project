@@ -6,6 +6,14 @@
     <title>Gfit | Healthy Lifestyle</title>
     <link rel="stylesheet" href="Assets/style.css">
 </head>
+
+<!-- AUTH GUARD -->
+<script>
+    if (!localStorage.getItem("isLoggedIn")) {
+        window.location.href = "loqin.html";
+    }
+</script>
+
 <body style="background: #f8fafc;">
     
     <!-- Navigation -->
@@ -14,9 +22,11 @@
         <div style="display: flex; gap: 20px; align-items: center;">
             <a href="index.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Home</a>
             <a href="dashboard.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Dashboard</a>
+            <a href="gfit.html" style="text-decoration: none; color: var(--primary); font-weight: 600; border-bottom: 2px solid var(--primary); padding-bottom: 2px;">Gfit</a>
             <a href="health-store.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Health Store</a>
-            
-            <a href="index.html" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.8rem;">Log Out</a>
+
+            <span style="font-weight: 600; margin-left: 10px;" id="greetUserGfit">Hello, User!</span>
+            <button onclick="handleLogout()" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.8rem;">Log Out</button>
         </div>
     </nav>
 
@@ -63,6 +73,52 @@
         </div>
     </main>
 
+    <!-- Platform Footer -->
+    <footer class="hs-platform-footer">
+        <div class="hs-footer-grid">
+            <div class="hs-footer-brand">
+                <span class="logo-text">Gnosia</span>
+                <p>Empowering your health through smart technology, trusted products, and personalized care on one integrated platform.</p>
+            </div>
+            <div class="hs-footer-col">
+                <h4>Platform</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="health-store.html">Health Store</a></li>
+                    <li><a href="gfit.html">Gfit</a></li>
+                </ul>
+            </div>
+            <div class="hs-footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Partners</a></li>
+                </ul>
+            </div>
+            <div class="hs-footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Medical Disclaimer</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="hs-footer-bottom">&copy; 2026 Gnosia Team. All rights reserved.</div>
+    </footer>
+
     <script src="script/script.js"></script>
+    <script>
+        // Tampilkan nama user
+        const email = localStorage.getItem("userEmail");
+        if (email) {
+            const name = email.split("@")[0];
+            document.getElementById("greetUserGfit").textContent = "Hello, " + name + "!";
+        }
+    </script>
 </body>
 </html>

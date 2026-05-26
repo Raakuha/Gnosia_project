@@ -54,7 +54,7 @@ function formatLabel(s) {
 function injectSymptomModal() {
   if (document.getElementById('symptomModal')) return;
   document.body.insertAdjacentHTML('beforeend', `
-    <div id="symptomModal" onclick="closeSymptomPicker(event)" style="
+    <div id="symptomModal" onclick="closeSymptomPickerOnBackdrop(event)" style="
       display:none; position:fixed; inset:0; z-index:9999;
       background:rgba(15,23,42,0.55); backdrop-filter:blur(4px);
       justify-content:center; align-items:center; padding:20px;">
@@ -68,7 +68,7 @@ function injectSymptomModal() {
               <h3 style="font-size:1.25rem; font-weight:700; color:#0f172a; margin:0;">Select Your Symptoms</h3>
               <p style="font-size:0.8rem; color:#64748b; margin:4px 0 0;">Click symptoms to select. Click again to deselect.</p>
             </div>
-            <button onclick="closeModal()" style="
+            <button onclick="closeSymptomModal()" style="
               background:#f1f5f9; border:none; border-radius:50%; width:36px; height:36px;
               cursor:pointer; font-size:1.1rem; color:#64748b; display:flex;
               align-items:center; justify-content:center;"
@@ -188,14 +188,18 @@ function openSymptomPicker() {
   setTimeout(() => document.getElementById('symptomSearch')?.focus(), 100);
 }
 
-function closeModal() {
+// BUG FIX #1: Pisahkan closeModal menjadi closeSymptomModal dan closeProductModal
+// agar tidak saling overwrite satu sama lain.
+
+function closeSymptomModal() {
   const modal = document.getElementById('symptomModal');
   if (modal) modal.style.display = 'none';
   document.body.style.overflow = '';
 }
 
-function closeSymptomPicker(e) {
-  if (e.target.id === 'symptomModal') closeModal();
+// BUG FIX #2: Ganti nama fungsi backdrop symptom agar tidak konflik.
+function closeSymptomPickerOnBackdrop(e) {
+  if (e.target.id === 'symptomModal') closeSymptomModal();
 }
 
 function clearSymptoms() {
@@ -208,12 +212,9 @@ function applySymptoms() {
   if (selectedSymptoms.size === 0) { alert('Please select at least one symptom!'); return; }
   const input = document.getElementById('mainSearch');
   if (input) input.value = [...selectedSymptoms].join(', ');
-  closeModal();
+  closeSymptomModal();
   handleSearch();
 }
-
-// Tutup modal dengan ESC
-document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModal(); });
 
 // ─────────────────────────────────────────────
 // MAIN SEARCH HANDLER
@@ -343,7 +344,21 @@ function handleAuth(event) {
             return;
         }
     }
+
+    // Simpan status login ke localStorage
+    const emailInput = event.target.querySelector('input[type="email"]');
+    const email = emailInput ? emailInput.value : "user@example.com";
+    localStorage.setItem("isLoggedIn", "true");
+    localStorage.setItem("userEmail", email);
+
     window.location.href = "dashboard.html";
+}
+
+// Fungsi logout — panggil saat tombol Log Out diklik
+function handleLogout() {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userEmail");
+    window.location.href = "index.html";
 }
 
 // ─────────────────────────────────────────────
@@ -355,3 +370,234 @@ const observer = new IntersectionObserver((entries) => {
     });
 });
 document.querySelectorAll('.stat-card, header > div').forEach(el => observer.observe(el));
+
+// ─────────────────────────────────────────────
+// HEALTH STORE — PRODUCT INFO MODAL
+// ─────────────────────────────────────────────
+const PRODUCT_DATA = {
+  'weight-dv': {
+    badge:'Weight Management', name:'DV Weight Loss for Women',
+    komposisi:'Green tea extract 400mg, Garcinia cambogia 200mg, L-carnitine 150mg, Vitamin B6 2mg, Chromium 100mcg',
+    indikasi:'Mendukung penurunan berat badan pada wanita dewasa, membantu metabolisme lemak dan kontrol nafsu makan',
+    dosis:'2 kapsul per hari',
+    aturan:'Diminum pagi hari sebelum makan bersama segelas air putih. Tidak dianjurkan dikonsumsi malam hari karena mengandung kafein',
+    alternatif:'Nutri Shake (meal replacement), Lean Shake Burn (thermogenic)',
+    efek:'Insomnia, peningkatan detak jantung, mual, sakit kepala ringan pada pengguna sensitif kafein'
+  },
+  'weight-nutrishake': {
+    badge:'Weight Management', name:'Nutri Shake',
+    komposisi:'Whey protein isolat 20g, Serat psyllium 5g, MCT oil 3g, Vitamin & mineral mix, Stevia',
+    indikasi:'Pengganti makan untuk manajemen kalori, mendukung rasa kenyang lebih lama dan asupan nutrisi harian',
+    dosis:'1 sachet (50g) dicampur 250ml air atau susu rendah lemak',
+    aturan:'Gunakan sebagai pengganti sarapan atau makan siang. Tidak disarankan mengganti lebih dari 2 kali makan per hari',
+    alternatif:'DV Weight Loss (suplemen), Lean Shake Burn (protein tinggi)',
+    efek:'Kembung, gas berlebih pada minggu pertama penggunaan, kemungkinan alergi laktosa'
+  },
+  'weight-lean': {
+    badge:'Weight Management', name:'Lean Shake Burn',
+    komposisi:'Whey protein concentrate 25g, CLA 500mg, Green coffee extract 200mg, L-theanine 100mg, Vitamin B complex',
+    indikasi:'Mendukung komposisi tubuh lean, meningkatkan metabolisme basal saat program latihan fisik intensif',
+    dosis:'1 scoop (40g) per sajian, maksimal 2 sajian per hari',
+    aturan:'Konsumsi 30 menit sebelum latihan atau sebagai sarapan. Hindari penggunaan >2x/hari atau bersamaan dengan stimulan lain',
+    alternatif:'Nutri Shake (untuk non-atlet), 100% Pure Whey Protein (tanpa thermogenic)',
+    efek:'Peningkatan suhu tubuh, keringat berlebih, tremor ringan, tidak cocok untuk penderita hipertensi'
+  },
+  'med-theraflu': {
+    badge:'Medications', name:'Theraflu-D Nighttime Severe Cold',
+    komposisi:'Acetaminophen 650mg, Diphenhydramine HCl 25mg, Phenylephrine HCl 10mg per dosis',
+    indikasi:'Meredakan gejala flu berat malam hari: demam, nyeri tubuh, hidung tersumbat, bersin, dan batuk',
+    dosis:'Dewasa dan anak >12 tahun: 1 sachet dilarutkan dalam 240ml air panas, setiap 4 jam, maks. 5 sachet/24 jam',
+    aturan:'Minum menjelang tidur. Jangan mengemudi setelah konsumsi. Tidak boleh dikombinasikan dengan obat lain yang mengandung acetaminophen atau antihistamin',
+    alternatif:'Paracetamol + CTM (lebih terjangkau), Mucinex DM (tanpa antihistamin)',
+    efek:'Kantuk, mulut kering, retensi urin, konstipasi, peningkatan tekanan darah. Overdosis acetaminophen berbahaya bagi hati'
+  },
+  'med-gaviscon': {
+    badge:'Medications', name:'Gaviscon',
+    komposisi:'Sodium alginate 500mg, Sodium bicarbonate 267mg, Calcium carbonate 160mg per 10ml',
+    indikasi:'Meredakan heartburn, refluks asam lambung (GERD), dan rasa tidak nyaman di dada setelah makan',
+    dosis:'Dewasa: 10–20ml (2–4 sendok teh) setelah makan dan sebelum tidur, maks. 4 kali/hari',
+    aturan:'Kocok sebelum digunakan. Minum segera setelah makan atau saat gejala muncul. Jangan melebihi dosis yang dianjurkan',
+    alternatif:'Antasida (Mylanta, Promag) untuk gejala ringan, Omeprazole (PPI) untuk GERD kronis',
+    efek:'Perut kembung, mual ringan. Kandungan natrium tinggi — hati-hati pada pasien hipertensi atau diet rendah garam'
+  },
+  'med-mucinex': {
+    badge:'Medications', name:'Mucinex DM Extended Release',
+    komposisi:'Guaifenesin 600mg + Dextromethorphan HBr 30mg (extended release)',
+    indikasi:'Mengencerkan dahak pada batuk produktif dan menekan batuk kering akibat infeksi saluran napas atas',
+    dosis:'Dewasa & anak >12 tahun: 1–2 tablet setiap 12 jam, maks. 4 tablet/24 jam',
+    aturan:'Telan utuh, jangan dikunyah atau dibelah. Minum dengan banyak air putih. Hindari alkohol selama konsumsi',
+    alternatif:'OBH Combi (sirup ekspektoran), Bisolvon (ambroxol) untuk pengenceran dahak saja',
+    efek:'Mual, pusing, kantuk ringan. Dextromethorphan dapat menyebabkan efek disosiatif jika overdosis'
+  },
+  'mental-moodjoy': {
+    badge:'Mental Health', name:'Bio Nutrition Mood Joy',
+    komposisi:'5-HTP 50mg, St. John\'s Wort 300mg, Ashwagandha 200mg, L-theanine 100mg, Vitamin B12 500mcg',
+    indikasi:'Mendukung keseimbangan emosional, mengurangi stres ringan-sedang, dan meningkatkan suasana hati secara alami',
+    dosis:'1 kapsul, 2 kali sehari',
+    aturan:'Minum pagi dan siang setelah makan. Dibutuhkan 2–4 minggu untuk efek optimal. TIDAK boleh dikombinasikan dengan antidepresan (SSRI/MAOI)',
+    alternatif:'Sleep Formula 5-HTP (untuk masalah tidur), Moringa Pure (untuk energi umum)',
+    efek:'Mual, diare ringan, sakit kepala. St. John\'s Wort dapat mengurangi efektivitas kontrasepsi oral dan obat HIV'
+  },
+  'mental-moringa': {
+    badge:'Mental Health', name:'BioPro Wellness Moringa Pure 2400',
+    komposisi:'Moringa oleifera leaf extract 2400mg, Vitamin A 500IU, Vitamin C 40mg, Iron 2mg, Calcium 100mg',
+    indikasi:'Meningkatkan energi dan kejernihan mental, mendukung sistem imun, sumber antioksidan alami harian',
+    dosis:'2 kapsul per hari',
+    aturan:'Minum pagi hari setelah sarapan. Dapat dikonsumsi jangka panjang sebagai suplemen nutrisi harian',
+    alternatif:'Spirulina (antioksidan serupa), Multivitamin Naturelo (lebih lengkap)',
+    efek:'Umumnya aman. Konsumsi berlebihan dapat menyebabkan diare. Hindari dosis tinggi pada ibu hamil (efek uterotonik pada dosis sangat tinggi)'
+  },
+  'mental-sleep': {
+    badge:'Mental Health', name:'Sleep Formula 5-HTP',
+    komposisi:'5-HTP (Griffonia simplicifolia) 100mg, Melatonin 1mg, Magnesium glycinate 200mg, L-theanine 150mg',
+    indikasi:'Mendukung kualitas tidur, mempersingkat waktu onset tidur, mengurangi kecemasan menjelang tidur',
+    dosis:'1 kapsul, 30–60 menit sebelum tidur',
+    aturan:'Hanya dikonsumsi malam hari. Mulai dengan 1 kapsul. Hindari bersamaan dengan alkohol atau obat penenang. TIDAK boleh dikombinasikan dengan antidepresan',
+    alternatif:'Melatonin saja (dosis lebih rendah), Bio Nutrition Mood Joy (untuk stres siang hari)',
+    efek:'Kantuk berlebih keesokan hari (jika dosis terlalu tinggi), mimpi vivid, mual ringan, sakit kepala'
+  },
+  'vit-naturelo': {
+    badge:'Vitamins', name:'Naturelo One Daily Multivitamin',
+    komposisi:'Vitamin A, C, D3, E, K2, B-complex, Folate, Biotin, Zinc, Selenium, Magnesium, Iodine — semua berbasis whole-food',
+    indikasi:'Memenuhi kebutuhan vitamin dan mineral harian, mencegah defisiensi nutrisi, mendukung energi dan imunitas',
+    dosis:'1 kapsul per hari',
+    aturan:'Konsumsi setelah makan terbesar dalam sehari untuk penyerapan optimal. Tidak perlu dikonsumsi bersama suplemen vitamin lain',
+    alternatif:'Solgar Vitamin D3 (jika hanya butuh D3), XXL Omega-3 (untuk kesehatan jantung spesifik)',
+    efek:'Urine berwarna kuning cerah (normal, dari riboflavin), mual jika dikonsumsi perut kosong. Jarang terjadi reaksi alergi'
+  },
+  'vit-omega3': {
+    badge:'Vitamins', name:'XXL Nutrition Omega 3',
+    komposisi:'Fish oil 1000mg (EPA 180mg + DHA 120mg per softgel), Vitamin E 5IU sebagai antioksidan',
+    indikasi:'Mendukung kesehatan kardiovaskular, fungsi otak dan memori, mengurangi inflamasi, kesehatan sendi',
+    dosis:'2–3 softgel per hari',
+    aturan:'Minum bersama makanan untuk mengurangi mual. Simpan di tempat sejuk. Pasien dengan pengencer darah harus konsultasi dokter',
+    alternatif:'Flaxseed oil (vegan), Krill oil (bioavailabilitas lebih tinggi), Nordic Naturals Omega-3',
+    efek:'Bau ikan pada napas/sendawa, diare dosis tinggi, dapat meningkatkan risiko perdarahan pada dosis >3g/hari'
+  },
+  'vit-d3': {
+    badge:'Vitamins', name:'Solgar Vitamin D3 2000 IU',
+    komposisi:'Cholecalciferol (Vitamin D3) 2000 IU (50mcg) dalam minyak olive oil sebagai carrier',
+    indikasi:'Mencegah dan mengatasi defisiensi Vitamin D, mendukung kepadatan tulang, imunitas, dan metabolisme kalsium',
+    dosis:'1 softgel per hari, atau sesuai anjuran dokter berdasarkan hasil tes darah 25(OH)D',
+    aturan:'Konsumsi bersama makanan berlemak untuk penyerapan optimal. Cek kadar vitamin D secara berkala saat konsumsi rutin',
+    alternatif:'Vitamin D3 + K2 combo (untuk kesehatan tulang optimal), Naturelo Multivitamin (sudah mengandung D3)',
+    efek:'Jarang pada dosis 2000 IU. Overdosis kronis (>10.000 IU/hari) dapat menyebabkan hiperkalsemia, mual, lemah otot'
+  },
+  'immune-canprev': {
+    badge:'Oncology & Immune', name:'CanPrev Pro-Biotik',
+    komposisi:'10 strain probiotik 25 Billion CFU (Lactobacillus acidophilus, Bifidobacterium longum, dll.), FOS prebiotic 100mg',
+    indikasi:'Menjaga keseimbangan mikrobioma usus selama terapi, mendukung imunitas mukosa, mengurangi diare akibat antibiotik/kemoterapi',
+    dosis:'1 kapsul per hari',
+    aturan:'Simpan di kulkas setelah dibuka. Minum 2 jam setelah antibiotik (jangan bersamaan). Konsumsi sebelum makan',
+    alternatif:'Lacto-B (probiotik dasar), Biokul (yogurt probiotik alami), Enterogermina',
+    efek:'Kembung dan gas pada minggu pertama (normal). Pada pasien immunocompromised berat — konsultasi dokter sebelum konsumsi'
+  },
+  'immune-progressive': {
+    badge:'Oncology & Immune', name:'Progressive Immuno Daily Support',
+    komposisi:'Vitamin C 500mg, Vitamin D3 1000 IU, Zinc 15mg, Selenium 100mcg, Elderberry extract 300mg, Echinacea 200mg',
+    indikasi:'Dukungan imunologi harian untuk pasien dalam perawatan jangka panjang, pemulihan pasca-penyakit serius',
+    dosis:'2 kapsul per hari',
+    aturan:'Minum pagi hari setelah makan. Untuk pasien kemoterapi — gunakan hanya atas rekomendasi oncologist (beberapa antioksidan dapat mengganggu terapi)',
+    alternatif:'CanPrev Pro-Biotik (fokus gut immunity), Promera Immune Support (dengan colostrum)',
+    efek:'Umumnya aman. Echinacea tidak direkomendasikan untuk penyakit autoimun. Zinc dosis tinggi jangka panjang dapat mengganggu absorpsi tembaga'
+  },
+  'immune-promera': {
+    badge:'Oncology & Immune', name:'Promera Health Immune Support',
+    komposisi:'Bovine colostrum 500mg, IgG concentrate 200mg, Lactoferrin 100mg, Vitamin C 250mg, Zinc 10mg',
+    indikasi:'Mendukung pertahanan imun selama masa pemulihan, meningkatkan kadar imunoglobulin, integritas lapisan usus',
+    dosis:'2 kapsul, 2 kali sehari',
+    aturan:'Minum 30 menit sebelum makan di pagi dan sore hari. Hindari konsumsi bersamaan dengan susu pasteurisasi panas',
+    alternatif:'Progressive Immuno (tanpa produk susu), CanPrev Pro-Biotik (untuk masalah usus)',
+    efek:'Kemungkinan reaksi pada alergi susu sapi, kembung ringan. Tidak cocok untuk vegan/vegetarian'
+  },
+  'sport-whey': {
+    badge:'Sport & Fitness', name:'100% Pure Whey Protein',
+    komposisi:'Whey protein concentrate 80% — 24g protein per scoop, BCAA alami ~5g, Glutamine ~4g, Laktosa <5%',
+    indikasi:'Mendukung pemulihan dan pertumbuhan otot pasca latihan, memenuhi kebutuhan protein harian atlet',
+    dosis:'1–2 scoop (25–50g) per hari',
+    aturan:'Konsumsi dalam 30 menit setelah latihan dicampur 200–300ml air dingin atau susu. Tidak menggantikan makanan utuh',
+    alternatif:'Whey Isolate (untuk intoleransi laktosa), Plant-based protein (untuk vegan), Creatine (untuk kekuatan)',
+    efek:'Kembung/gas pada sensitif laktosa, jerawat (pada sebagian pengguna), tekanan ginjal jika konsumsi berlebihan tanpa cukup air'
+  },
+  'sport-nitric': {
+    badge:'Sport & Fitness', name:'Nitric Boost Ultra',
+    komposisi:'L-Citrulline 3g, L-Arginine 2g, Beetroot extract 500mg, Vitamin B3 (Niacin) 20mg, Magnesium 100mg',
+    indikasi:'Meningkatkan produksi nitric oxide untuk aliran darah, performa latihan, dan "pump" otot saat olahraga',
+    dosis:'1 serving (1 scoop) 30 menit sebelum latihan',
+    aturan:'Jangan dikonsumsi bersamaan dengan obat hipotensi atau Viagra/sildenafil. Tidak untuk penggunaan sehari-hari tanpa olahraga',
+    alternatif:'Pre-workout dengan kafein (lebih stimulan), Creatine (untuk kekuatan murni), Beetroot juice alami',
+    efek:'Penurunan tekanan darah, kemerahan kulit (dari niacin), sakit kepala, gangguan pencernaan ringan'
+  },
+  'sport-creatine': {
+    badge:'Sport & Fitness', name:'Creatine Monohydrate Pure Powder',
+    komposisi:'Creatine monohydrate 100% micronized, 5g per serving. Tanpa tambahan apapun',
+    indikasi:'Meningkatkan kekuatan dan output tenaga pada latihan intensitas tinggi, mempercepat pemulihan antar set',
+    dosis:'Loading phase: 20g/hari (4x5g) selama 5–7 hari. Maintenance: 3–5g/hari',
+    aturan:'Larutkan dalam air atau minuman karbohidrat. Minum banyak air (minimal 3L/hari). Aman dikonsumsi jangka panjang tanpa cycling',
+    alternatif:'Creatine HCl (lebih larut, dosis kecil), Nitric Boost (untuk pump), Beta-alanine (untuk endurance)',
+    efek:'Peningkatan berat badan 1–2kg dari retensi air (normal), kram ringan jika kurang minum. Aman untuk ginjal sehat'
+  },
+  'routine-diabetes': {
+    badge:'Routine Medication', name:'Nature Made Diabetes Health Pack',
+    komposisi:'Alpha lipoic acid 200mg, Chromium picolinate 200mcg, Magnesium 250mg, Vitamin D3 1000IU, Omega-3 1000mg per pack',
+    indikasi:'Mendukung metabolisme glukosa, sensitivitas insulin, kesehatan saraf perifer, dan komplikasi diabetes ringan',
+    dosis:'1 pack (4 kapsul) per hari bersama makanan terbesar',
+    aturan:'BUKAN pengganti obat diabetes dari dokter (Metformin/insulin). Gunakan sebagai terapi komplementer. Pantau gula darah secara rutin',
+    alternatif:'Konsumsi masing-masing suplemen secara terpisah, Gymnema sylvestre herbal',
+    efek:'Mual jika perut kosong. Alpha lipoic acid dapat menurunkan gula darah berlebih jika dikombinasikan dengan obat antidiabetes'
+  },
+  'routine-bp': {
+    badge:'Routine Medication', name:'BPH Blood Pressure Health',
+    komposisi:'Aged garlic extract 600mg, Hawthorn berry 300mg, CoQ10 100mg, Magnesium 150mg, Potassium 99mg',
+    indikasi:'Mendukung tekanan darah dalam kisaran normal, kesehatan pembuluh darah, dan fungsi jantung',
+    dosis:'2 kapsul per hari',
+    aturan:'BUKAN pengganti obat antihipertensi dari dokter. Konsultasi dokter sebelum digunakan bersamaan dengan obat hipertensi. Pantau tekanan darah rutin',
+    alternatif:'DASH diet supplement, Magnesium standalone, Hibiscus tea extract',
+    efek:'Garlic extract dapat menyebabkan bau mulut/tubuh. Hawthorn dapat memperkuat efek obat jantung (digoxin). Jangan stop obat dokter tanpa konsultasi'
+  },
+  'routine-cholesterol': {
+    badge:'Routine Medication', name:'Choles-T Cholesterol Support',
+    komposisi:'Plant sterols 800mg, Psyllium husk 500mg, Red yeast rice 300mg, Niacin 20mg, CoQ10 50mg',
+    indikasi:'Membantu menurunkan LDL kolesterol, meningkatkan HDL, mendukung kesehatan kardiovaskular',
+    dosis:'2 kapsul, 2 kali sehari bersama makan',
+    aturan:'Konsumsi bersama makanan berlemak untuk penyerapan plant sterol optimal. Red yeast rice mirip statin — TIDAK boleh dikombinasikan dengan obat statin dari dokter',
+    alternatif:'Omega-3 (untuk trigliserida), Niacin standalone, Berberine (alternatif alami)',
+    efek:'Red yeast rice dapat menyebabkan nyeri otot (miopati), kerusakan hati pada dosis tinggi — efek serupa statin. Cek enzim hati jika konsumsi >3 bulan'
+  }
+};
+
+function openProductModal(id) {
+  const p = PRODUCT_DATA[id];
+  if (!p) return;
+  document.getElementById('pm-badge').textContent = p.badge;
+  document.getElementById('pm-name').textContent = p.name;
+  document.getElementById('pm-komposisi').textContent = p.komposisi;
+  document.getElementById('pm-indikasi').textContent = p.indikasi;
+  document.getElementById('pm-dosis').textContent = p.dosis;
+  document.getElementById('pm-aturan').textContent = p.aturan;
+  document.getElementById('pm-alternatif').textContent = p.alternatif;
+  document.getElementById('pm-efek').textContent = p.efek;
+  const modal = document.getElementById('productModal');
+  modal.style.display = 'flex';
+  document.body.style.overflow = 'hidden';
+}
+
+// BUG FIX #3: closeProductModal sekarang punya fungsi closenya sendiri
+// dan memeriksa e.target dengan benar sebelum menutup modal.
+function closeProductModal(e) {
+  if (e && e.target.id !== 'productModal') return;
+  const modal = document.getElementById('productModal');
+  if (modal) modal.style.display = 'none';
+  document.body.style.overflow = '';
+}
+
+// BUG FIX #4: Satu event listener ESC terpadu untuk menutup modal manapun yang sedang terbuka.
+// Menggantikan dua addEventListener('keydown') yang duplikat di kode asli.
+document.addEventListener('keydown', e => {
+  if (e.key === 'Escape') {
+    const symptomModal = document.getElementById('symptomModal');
+    const productModal = document.getElementById('productModal');
+    if (symptomModal && symptomModal.style.display === 'flex') closeSymptomModal();
+    if (productModal && productModal.style.display === 'flex') closeProductModal(null);
+  }
+});

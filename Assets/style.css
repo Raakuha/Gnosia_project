@@ -313,3 +313,42 @@ nav a:not(.btn):not(.logo):hover {
     color: #1d4ed8 !important;
     transform: translateY(-1px);
 }
+/* ─── SHARED PLATFORM FOOTER ─── */
+.hs-platform-footer {
+    background: linear-gradient(160deg, #1e3a8a 0%, #1d4ed8 40%, #2563eb 100%);
+    color: #e0e7ff; padding: 48px 8% 28px;
+}
+.hs-footer-grid {
+    display: grid; grid-template-columns: 1.4fr repeat(3,1fr);
+    gap: 40px; max-width: 1200px; margin: 0 auto 36px;
+}
+.hs-footer-brand .logo-text {
+    font-size: 1.75rem; font-weight: 800; color: #fff;
+    margin-bottom: 12px; display: block;
+}
+.hs-footer-brand p { font-size: 0.9rem; line-height: 1.6; color: #bfdbfe; max-width: 280px; }
+.hs-footer-col h4 {
+    font-size: 0.75rem; font-weight: 700; text-transform: uppercase;
+    letter-spacing: 0.08em; color: #93c5fd; margin-bottom: 16px;
+}
+.hs-footer-col ul { list-style: none; }
+.hs-footer-col li { margin-bottom: 10px; }
+.hs-footer-col a {
+    color: #dbeafe; text-decoration: none; font-size: 0.9rem;
+    font-weight: 500; transition: color 0.2s ease;
+}
+.hs-footer-col a:hover { color: #fff; }
+.hs-footer-bottom {
+    text-align: center; padding-top: 24px;
+    border-top: 1px solid rgba(255,255,255,0.15);
+    font-size: 0.85rem; color: #93c5fd;
+}
+@media (max-width: 1024px) { .hs-footer-grid { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 768px)  { .hs-footer-grid { grid-template-columns: 1fr; gap: 28px; } }
+
+/* ─── Health Store Modal ─── */
+@keyframes modalIn { from{opacity:0;transform:scale(0.95)} to{opacity:1;transform:scale(1)} }
+.pm-row { display:flex; flex-direction:column; gap:4px; padding:14px; background:#f8fafc; border-radius:12px; }
+.pm-row.pm-warning { background:#fff7ed; }
+.pm-label { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#64748b; }
+.pm-val { font-size:0.9rem; color:#1e293b; line-height:1.6; }

@@ -6,17 +6,26 @@
     <title>Dashboard | Gnosia</title>
     <link rel="stylesheet" href="Assets/style.css">
 </head>
+
+<!-- AUTH GUARD: harus paling atas, sebelum apapun ke-render -->
+<script>
+    if (!localStorage.getItem("isLoggedIn")) {
+        window.location.href = "loqin.html";
+    }
+</script>
+
 <body style="background: #f1f5f9;">
     
     <nav>
         <a href="index.html" class="logo">Gnosia</a>
         <div style="display: flex; align-items: center; gap: 20px;">
             <a href="index.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Home</a>
+            <span style="color: var(--primary); font-weight: 600; border-bottom: 2px solid var(--primary); padding-bottom: 2px; cursor: default;">Dashboard</span>
             <a href="gfit.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Gfit</a>
             <a href="health-store.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Health Store</a>
             
-            <span style="font-weight: 600; margin-left: 10px;">Hello, User!</span>
-            <a href="index.html" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.8rem;">Log Out</a>
+            <span style="font-weight: 600; margin-left: 10px;" id="greetUser">Hello, User!</span>
+            <button onclick="handleLogout()" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.8rem;">Log Out</button>
         </div>
     </nav>
 
@@ -71,14 +80,52 @@
         </div>
     </main>
 
-    <footer style="background: white; padding: 30px 8%; text-align: center; border-top: 1px solid #e2e8f0; margin-top: 40px;">
-        <h3 style="color: var(--primary); font-size: 1.5rem; margin-bottom: 10px;">Gnosia</h3>
-        <p style="color: var(--text-light); font-size: 0.9rem; margin-bottom: 20px;">Empowering your health through smart technology.</p>
-        <div style="font-size: 0.85rem; color: var(--text-light);">
-            &copy; 2026 Gnosia Team. All rights reserved.
+    <!-- Platform Footer -->
+    <footer class="hs-platform-footer">
+        <div class="hs-footer-grid">
+            <div class="hs-footer-brand">
+                <span class="logo-text">Gnosia</span>
+                <p>Empowering your health through smart technology, trusted products, and personalized care on one integrated platform.</p>
+            </div>
+            <div class="hs-footer-col">
+                <h4>Platform</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="dashboard.html">Dashboard</a></li>
+                    <li><a href="health-store.html">Health Store</a></li>
+                    <li><a href="gfit.html">Gfit</a></li>
+                </ul>
+            </div>
+            <div class="hs-footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Careers</a></li>
+                    <li><a href="#">Partners</a></li>
+                </ul>
+            </div>
+            <div class="hs-footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Medical Disclaimer</a></li>
+                    <li><a href="#">Cookie Policy</a></li>
+                </ul>
+            </div>
         </div>
+        <div class="hs-footer-bottom">&copy; 2026 Gnosia Team. All rights reserved.</div>
     </footer>
 
     <script src="script/script.js"></script>
+    <script>
+        // Tampilkan nama user dari localStorage
+        const email = localStorage.getItem("userEmail");
+        if (email) {
+            const name = email.split("@")[0];
+            document.getElementById("greetUser").textContent = "Hello, " + name + "!";
+        }
+    </script>
 </body>
 </html>
