@@ -50,6 +50,99 @@ Berikut perbandingan performa antara model utama (Logistic Regression + TF-IDF) 
 
 ---
 
+## Daftar Penyakit yang Dapat Diprediksi
+
+Model Gnosia dilatih untuk mengenali **41 kelas penyakit** berdasarkan kombinasi gejala yang diinputkan. Berikut daftar lengkapnya:
+
+### 🫀 Kardiovaskular & Pembuluh Darah
+| No | Nama Penyakit |
+|---|---|
+| 1 | Heart attack |
+| 2 | Hypertension |
+| 3 | Varicose veins |
+
+### 🫁 Pernapasan
+| No | Nama Penyakit |
+|---|---|
+| 4 | Bronchial Asthma |
+| 5 | Common Cold |
+| 6 | Pneumonia |
+| 7 | Tuberculosis |
+
+### 🧠 Saraf & Otak
+| No | Nama Penyakit |
+|---|---|
+| 8 | (vertigo) Paroxysmal Positional Vertigo |
+| 9 | Cervical spondylosis |
+| 10 | Migraine |
+| 11 | Paralysis (brain hemorrhage) |
+
+### 🦠 Infeksi & Virus
+| No | Nama Penyakit |
+|---|---|
+| 12 | AIDS |
+| 13 | Chicken pox |
+| 14 | Dengue |
+| 15 | Fungal infection |
+| 16 | Impetigo |
+| 17 | Malaria |
+| 18 | Typhoid |
+
+### 🍺 Hati & Saluran Empedu
+| No | Nama Penyakit |
+|---|---|
+| 19 | Alcoholic hepatitis |
+| 20 | Chronic cholestasis |
+| 21 | Hepatitis A |
+| 22 | Hepatitis B |
+| 23 | Hepatitis C |
+| 24 | Hepatitis D |
+| 25 | Hepatitis E |
+| 26 | Jaundice |
+
+### 🍽️ Pencernaan & Lambung
+| No | Nama Penyakit |
+|---|---|
+| 27 | GERD |
+| 28 | Gastroenteritis |
+| 29 | Peptic ulcer disease |
+| 30 | Dimorphic hemorrhoids (piles) |
+
+### 🦴 Sendi & Muskuloskeletal
+| No | Nama Penyakit |
+|---|---|
+| 31 | Arthritis |
+| 32 | Osteoarthritis |
+
+### 🩺 Metabolik & Endokrin
+| No | Nama Penyakit |
+|---|---|
+| 33 | Diabetes |
+| 34 | Hyperthyroidism |
+| 35 | Hypothyroidism |
+| 36 | Hypoglycemia |
+
+### 🌿 Alergi & Reaksi Imun
+| No | Nama Penyakit |
+|---|---|
+| 37 | Allergy |
+| 38 | Drug Reaction |
+
+### 🧴 Kulit
+| No | Nama Penyakit |
+|---|---|
+| 39 | Acne |
+| 40 | Psoriasis |
+
+### 🚽 Saluran Kemih
+| No | Nama Penyakit |
+|---|---|
+| 41 | Urinary tract infection |
+
+> **Catatan:** Nama penyakit pada tabel di atas disesuaikan ejaannya untuk keterbacaan. Nama yang disimpan dalam model mengikuti format asli dari dataset pelatihan.
+
+---
+
 ## Cara Menjalankan
 
 Ikuti langkah-langkah berikut untuk menjalankan project ini di perangkat lokal Anda:
