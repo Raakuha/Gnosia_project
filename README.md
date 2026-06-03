@@ -4,6 +4,8 @@
 
 Gnosia adalah aplikasi kesehatan berbasis kecerdasan buatan yang dirancang untuk membantu pengguna melakukan pengecekan gejala penyakit secara mandiri dan cepat. Fokus utama aplikasi ini adalah memberikan prediksi penyakit berdasarkan gejala yang diinputkan pengguna dengan memanfaatkan model Machine Learning yang telah dilatih pada data medis. Dengan Gnosia, pengguna dapat memperoleh gambaran awal mengenai kondisi kesehatan mereka sebelum berkonsultasi lebih lanjut dengan tenaga medis profesional.
 
+Model utama yang digunakan adalah **Logistic Regression dengan vektorisasi TF-IDF**, yang dibandingkan performanya terhadap model **BERT fine-tuned dengan augmentasi data** sebagai pendekatan deep learning. Perbandingan ini bertujuan untuk mengevaluasi trade-off antara model klasik yang ringan dan efisien dengan model berbasis transformer yang lebih kompleks.
+
 Project ini dikembangkan sebagai bagian dari tugas dua mata kuliah sekaligus, yaitu **Machine Learning** dan **Software Engineering**.
 
 ---
@@ -29,20 +31,22 @@ Aplikasi ini memiliki beberapa fitur utama yang mendukung fungsionalitasnya:
 | Frontend | HTML, CSS, JavaScript (Vanilla) |
 | Backend | Python, FastAPI, Uvicorn |
 | Machine Learning | Scikit-learn, NLTK, Joblib |
-| Model | Logistic Regression + TF-IDF, Naive Bayes + BoW/TF-IDF |
-| Deep Learning | BERT (fine-tuned, opsional) |
+| Model Utama | Logistic Regression + TF-IDF |
+| Model Perbandingan | BERT (fine-tuned + augmentasi data) |
+| Deep Learning | Transformers (HuggingFace), PyTorch |
 
 ---
 
 ## Performa Model
 
-| Model | Test Accuracy | F1 Score |
-|---|---|---|
-| Naive Bayes + BoW | 96.72% | 0.9596 |
-| Naive Bayes + TF-IDF | 98.36% | 0.9825 |
-| Logistic Regression + TF-IDF | 100.00% | 1.0000 |
+Berikut perbandingan performa antara model utama (Logistic Regression + TF-IDF) dan model pembanding (BERT fine-tuned dengan augmentasi data):
 
-> Model dilatih pada dataset 304 sampel unik (41 kelas penyakit) setelah deduplikasi dari dataset sintetis.
+| Model | Pendekatan | Test Accuracy | F1 Score | Precision | Recall |
+|---|---|---|---|---|---|
+| Logistic Regression + TF-IDF | Classical ML | 100.00% | 1.0000 | 1.0000 | 1.0000 |
+| BERT fine-tuned + Augmentasi | Deep Learning (Transformer) | 95.08% | 0.9344 | 0.9262 | 0.9508 |
+
+> Model klasik dilatih pada dataset 304 sampel unik (41 kelas penyakit) setelah deduplikasi dari dataset sintetis. Model BERT (`bert-base-uncased`) dilatih selama 5 epoch menggunakan data training yang telah diaugmentasi dengan teknik permutasi gejala (15x per sampel) untuk meningkatkan generalisasi. Meskipun BERT adalah model yang lebih kompleks, Logistic Regression + TF-IDF unggul pada dataset ini karena pola gejala yang terstruktur dan deterministik.
 
 ---
 
@@ -92,13 +96,13 @@ GNOSIA_PROJECT/
 ├── Assets/
 │   └── style.css               # Global stylesheet
 ├── models/
-│   ├── bow_vectorizer.pkl       # Bag of Words vectorizer
 │   ├── tfidf_vectorizer.pkl     # TF-IDF vectorizer
-│   ├── nb_bow.pkl               # Model Naive Bayes + BoW
-│   ├── nb_tfidf.pkl             # Model Naive Bayes + TF-IDF
-│   ├── lr_bow.pkl               # Model Logistic Regression + BoW
-│   ├── lr_tfidf.pkl             # Model Logistic Regression + TF-IDF
-│   └── label_encoder.pkl        # Label encoder
+│   ├── lr_tfidf.pkl             # Model Logistic Regression + TF-IDF (model utama)
+│   ├── label_encoder.pkl        # Label encoder
+│   └── bert/                   # Folder model BERT fine-tuned
+│       ├── config.json          # Konfigurasi model BERT
+│       ├── pytorch_model.bin    # Bobot model BERT
+│       └── tokenizer/           # Tokenizer BERT
 ├── script/
 │   └── script.js               # Frontend logic & API integration
 ├── app.py                      # FastAPI backend
@@ -125,10 +129,21 @@ GNOSIA_PROJECT/
 | GET | `/diseases` | Daftar semua penyakit yang dapat diprediksi |
 
 ### Contoh Request `/predict`
+
+Gunakan model Logistic Regression (default):
 ```json
 {
   "symptoms": ["itching", "skin_rash", "nodal_skin_eruptions"],
   "model": "lr_tfidf",
+  "top_n": 3
+}
+```
+
+Atau gunakan model BERT untuk perbandingan:
+```json
+{
+  "symptoms": ["itching", "skin_rash", "nodal_skin_eruptions"],
+  "model": "bert",
   "top_n": 3
 }
 ```
