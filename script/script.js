@@ -210,6 +210,13 @@ function clearSymptoms() {
 
 function applySymptoms() {
   if (selectedSymptoms.size === 0) { alert('Please select at least one symptom!'); return; }
+  // ── AUTH GUARD ──
+  if (!localStorage.getItem("isLoggedIn")) {
+    closeSymptomModal();
+    localStorage.setItem("redirectAfterLogin", window.location.pathname);
+    window.location.href = "loqin.html";
+    return;
+  }
   const input = document.getElementById('mainSearch');
   if (input) input.value = [...selectedSymptoms].join(', ');
   closeSymptomModal();
@@ -220,6 +227,13 @@ function applySymptoms() {
 // MAIN SEARCH HANDLER
 // ─────────────────────────────────────────────
 async function handleSearch() {
+    // ── AUTH GUARD: harus login sebelum bisa analyze ──
+    if (!localStorage.getItem("isLoggedIn")) {
+        localStorage.setItem("redirectAfterLogin", window.location.pathname);
+        window.location.href = "loqin.html";
+        return;
+    }
+
     const input = document.getElementById('mainSearch').value.trim();
     const resultDiv = document.getElementById('searchResult');
 
@@ -278,10 +292,6 @@ async function handleSearch() {
                 <p style="font-size:0.75rem; color:#94a3b8; margin-top:15px;">
                     ⚠️ This is an AI prediction, not a medical diagnosis. Please consult a doctor.
                 </p>
-
-                <a href="loqin.html" class="btn btn-outline" style="display:inline-block; padding:8px 15px; font-size:0.85rem; margin-top:10px; text-decoration:none;">
-                    Log in to Save Result
-                </a>
             </div>
         `;
         resultDiv.classList.add('animate-up');
@@ -601,3 +611,35 @@ document.addEventListener('keydown', e => {
     if (productModal && productModal.style.display === 'flex') closeProductModal(null);
   }
 });
+
+// ─────────────────────────────────────────────
+// GUARDED NAVIGATION — Cek login sebelum akses fitur
+// ─────────────────────────────────────────────
+
+// Health Store: More Info button butuh login
+function guardedProductModal(productId) {
+    if (!localStorage.getItem("isLoggedIn")) {
+        localStorage.setItem("redirectAfterLogin", "health-store.html");
+        window.location.href = "loqin.html";
+        return;
+    }
+    openProductModal(productId);
+}
+
+// Gfit: Read Guide / See Recipes / Start Session butuh login
+function guardedGfitNav(event, page) {
+    event.preventDefault();
+    if (!localStorage.getItem("isLoggedIn")) {
+        localStorage.setItem("redirectAfterLogin", page);
+        window.location.href = "loqin.html";
+        return;
+    }
+    window.location.href = page;
+}
+
+// Logout handler
+function handleLogout() {
+    localStorage.removeItem("isLoggedIn");
+    localStorage.removeItem("userEmail");
+    window.location.href = "index.html";
+}

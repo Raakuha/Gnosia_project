@@ -1,0 +1,663 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Profile | Gnosia</title>
+    <link rel="stylesheet" href="Assets/style.css">
+    <style>
+        /* ── Profile Banner ── */
+        .profile-banner {
+            background: linear-gradient(135deg, #7986cb 0%, #5c6bc0 100%);
+            border-radius: 20px;
+            padding: 32px 36px;
+            display: flex;
+            align-items: center;
+            gap: 28px;
+            margin-bottom: 20px;
+            box-shadow: 0 8px 24px rgba(92, 107, 192, 0.3);
+        }
+        .profile-avatar {
+            width: 90px;
+            height: 90px;
+            border-radius: 50%;
+            background: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            flex-shrink: 0;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+        .profile-avatar svg {
+            width: 54px;
+            height: 54px;
+            color: #5c6bc0;
+        }
+        .profile-info h2 {
+            color: white;
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+        .profile-info .sub {
+            color: rgba(255,255,255,0.8);
+            font-size: 0.9rem;
+            margin-bottom: 14px;
+        }
+        .profile-stats {
+            display: flex;
+            gap: 8px;
+        }
+        .profile-stat {
+            background: rgba(255,255,255,0.2);
+            border-radius: 10px;
+            padding: 8px 16px;
+            text-align: center;
+            backdrop-filter: blur(8px);
+        }
+        .profile-stat .label {
+            font-size: 0.72rem;
+            color: rgba(255,255,255,0.85);
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.04em;
+        }
+        .profile-stat .value {
+            font-size: 0.9rem;
+            color: white;
+            font-weight: 700;
+            margin-top: 2px;
+        }
+
+        /* ── Welcome Bar ── */
+        .welcome-bar {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            margin-bottom: 16px;
+        }
+        .welcome-bar span {
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+
+        /* ── Healthy Tips ── */
+        .tips-card {
+            border: 2px solid var(--primary);
+            border-radius: 16px;
+            padding: 16px 22px;
+            display: flex;
+            align-items: flex-start;
+            gap: 14px;
+            margin-bottom: 28px;
+            background: white;
+        }
+        .tips-icon {
+            font-size: 1.4rem;
+            margin-top: 1px;
+        }
+        .tips-card .tips-title {
+            font-size: 0.85rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 4px;
+        }
+        .tips-card p {
+            font-size: 0.9rem;
+            color: var(--text-dark);
+        }
+
+        /* ── Three Column Grid ── */
+        .profile-grid {
+            display: grid;
+            grid-template-columns: 1fr 1.3fr 1fr;
+            gap: 20px;
+        }
+
+        /* ── Personal Info Card ── */
+        .info-row {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+            padding: 14px 16px;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 12px;
+        }
+        .info-row .info-icon-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .info-row .info-icon {
+            width: 32px;
+            height: 32px;
+            background: #e0f2fe;
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 0.9rem;
+            flex-shrink: 0;
+        }
+        .info-row .info-text {
+            font-size: 0.9rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+        .add-btn {
+            border: 1.5px solid #cbd5e1;
+            background: white;
+            color: var(--primary);
+            font-size: 0.8rem;
+            font-weight: 600;
+            padding: 6px 0;
+            border-radius: 8px;
+            cursor: pointer;
+            width: 100%;
+            margin-top: 6px;
+            transition: all 0.2s;
+        }
+        .add-btn:hover {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+
+        /* ── Chat Card ── */
+        .doctor-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding-bottom: 14px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+        .doctor-avatar {
+            width: 42px;
+            height: 42px;
+            border-radius: 50%;
+            background: #e0f2fe;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--primary);
+            font-size: 1.1rem;
+        }
+        .doctor-name {
+            font-weight: 700;
+            font-size: 0.95rem;
+            color: var(--text-dark);
+        }
+        .doctor-spec {
+            font-size: 0.8rem;
+            color: var(--text-light);
+        }
+        .chat-messages {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin-bottom: 14px;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .chat-msg {
+            max-width: 85%;
+        }
+        .chat-msg.doctor { align-self: flex-start; }
+        .chat-msg.user   { align-self: flex-end; }
+        .chat-bubble {
+            padding: 10px 14px;
+            border-radius: 14px;
+            font-size: 0.82rem;
+            line-height: 1.5;
+        }
+        .chat-msg.doctor .chat-bubble {
+            background: #f1f5f9;
+            color: var(--text-dark);
+            border-bottom-left-radius: 4px;
+        }
+        .chat-msg.user .chat-bubble {
+            background: var(--primary);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        .chat-time {
+            font-size: 0.7rem;
+            color: var(--text-light);
+            margin-top: 3px;
+            padding: 0 4px;
+        }
+        .chat-msg.user .chat-time { text-align: right; }
+        .chat-input-row {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            border: 1.5px solid #e2e8f0;
+            border-radius: 12px;
+            padding: 8px 12px;
+            background: #f8fafc;
+        }
+        .chat-input-row input {
+            flex: 1;
+            border: none;
+            background: transparent;
+            outline: none;
+            font-size: 0.85rem;
+            font-family: 'Poppins', sans-serif;
+            color: var(--text-dark);
+        }
+        .chat-send {
+            background: var(--primary);
+            border: none;
+            border-radius: 8px;
+            width: 30px;
+            height: 30px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            color: white;
+            font-size: 0.85rem;
+            transition: background 0.2s;
+            flex-shrink: 0;
+        }
+        .chat-send:hover { background: var(--primary-dark); }
+
+        /* ── Recent Activity ── */
+        .activity-item {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            padding: 14px;
+            background: #f8fafc;
+            border-radius: 12px;
+            margin-bottom: 10px;
+            transition: 0.2s;
+        }
+        .activity-item:hover {
+            background: #e0f2fe;
+        }
+        .activity-icon {
+            width: 38px;
+            height: 38px;
+            background: white;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1rem;
+            flex-shrink: 0;
+            box-shadow: 0 2px 6px rgba(0,0,0,0.06);
+        }
+        .activity-title {
+            font-size: 0.88rem;
+            font-weight: 700;
+            color: var(--text-dark);
+        }
+        .activity-sub {
+            font-size: 0.78rem;
+            color: var(--text-light);
+            margin-top: 2px;
+        }
+
+        /* ── Card headers ── */
+        .card-section-title {
+            font-size: 1rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 16px;
+        }
+
+        /* ── Nav profile icon ── */
+        .nav-profile-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            cursor: pointer;
+            border: none;
+            text-decoration: none;
+            transition: background 0.2s, transform 0.2s;
+        }
+        .nav-profile-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        @media (max-width: 768px) {
+            .profile-grid { grid-template-columns: 1fr; }
+            .profile-banner { flex-direction: column; text-align: center; }
+            .profile-stats { flex-wrap: wrap; justify-content: center; }
+        }
+    </style>
+</head>
+
+<!-- AUTH GUARD -->
+<script>
+    if (!localStorage.getItem("isLoggedIn")) {
+        window.location.href = "loqin.html";
+    }
+</script>
+
+<body style="background: #f1f5f9;">
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="logo">Gnosia</a>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <a href="index.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Home</a>
+            <a href="health-store.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Health Store</a>
+            <a href="gfit.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Gfit</a>
+            <a href="Chat.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Chat</a>
+            <a href="profile.html" class="nav-profile-btn" title="Profile">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <main style="padding: 32px 8%;">
+
+        <!-- Welcome Bar -->
+        <div class="welcome-bar animate-up">
+            <span id="welcomeText">Welcome, User!</span>
+        </div>
+
+        <!-- Profile Banner -->
+        <div class="profile-banner animate-up">
+            <div class="profile-avatar">
+                <svg xmlns="http://www.w3.org/2000/svg" fill="#5c6bc0" viewBox="0 0 24 24">
+                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                </svg>
+            </div>
+            <div class="profile-info">
+                <h2 id="profileName">User</h2>
+                <p class="sub" id="profileSub">—</p>
+                <div class="profile-stats">
+                    <div class="profile-stat">
+                        <div class="label">Height</div>
+                        <div class="value" id="statHeight">—</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="label">Weight</div>
+                        <div class="value" id="statWeight">—</div>
+                    </div>
+                    <div class="profile-stat">
+                        <div class="label">BMI</div>
+                        <div class="value" id="statBMI">—</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Today's Healthy Tips -->
+        <div class="tips-card animate-up">
+            <div class="tips-icon">💡</div>
+            <div>
+                <div class="tips-title">Today's Healthy Tips</div>
+                <p id="dailyTip">Drink at least 8 glasses of water a day to keep your body from dehydration.</p>
+            </div>
+        </div>
+
+        <!-- Three Column Grid -->
+        <div class="profile-grid">
+
+            <!-- 1. Personal Information -->
+            <div class="stat-card animate-up" style="animation-delay: 0.1s;">
+                <div class="card-section-title">Personal Information</div>
+
+                <div class="info-row">
+                    <div class="info-icon-row">
+                        <div class="info-icon">✉️</div>
+                        <span class="info-text" id="displayEmail">—</span>
+                    </div>
+                    <button class="add-btn" onclick="editField('email')">+ Add Email Address</button>
+                </div>
+
+                <div class="info-row">
+                    <div class="info-icon-row">
+                        <div class="info-icon">📱</div>
+                        <span class="info-text" id="displayPhone">—</span>
+                    </div>
+                    <button class="add-btn" onclick="editField('phone')">+ Add Phone Number</button>
+                </div>
+
+                <div class="info-row" style="margin-bottom:0;">
+                    <div class="info-icon-row">
+                        <div class="info-icon">⚧️</div>
+                        <span class="info-text" id="displayGender">—</span>
+                    </div>
+                    <button class="add-btn" onclick="editField('gender')">+ Add Gender & Age</button>
+                </div>
+            </div>
+
+            <!-- 2. Chat with a Doctor -->
+            <div class="stat-card animate-up" style="animation-delay: 0.2s;">
+                <div class="card-section-title">Chat with a Doctor</div>
+
+                <div class="doctor-header">
+                    <div class="doctor-avatar">👨‍⚕️</div>
+                    <div>
+                        <div class="doctor-name">Dr. Danis Saputra</div>
+                        <div class="doctor-spec">General Practitioner</div>
+                    </div>
+                </div>
+
+                <div class="chat-messages" id="chatMessages">
+                    <div class="chat-msg doctor">
+                        <div class="chat-bubble">Good morning, how can I help you?</div>
+                        <div class="chat-time">09.00</div>
+                    </div>
+                    <div class="chat-msg user">
+                        <div class="chat-bubble">Good morning, doc. I would like to know what my medication is.</div>
+                        <div class="chat-time">10.00</div>
+                    </div>
+                    <div class="chat-msg doctor">
+                        <div class="chat-bubble">The medicine is paracetamol and nexium.</div>
+                        <div class="chat-time">10.05</div>
+                    </div>
+                </div>
+
+                <div class="chat-input-row">
+                    <input type="text" id="chatInput" placeholder="send message" onkeydown="if(event.key==='Enter') sendChat()">
+                    <button class="chat-send" onclick="sendChat()">
+                        <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" fill="currentColor" viewBox="0 0 24 24">
+                            <path d="M2 21l21-9L2 3v7l15 2-15 2z"/>
+                        </svg>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 3. Recent Activity -->
+            <div class="stat-card animate-up" style="animation-delay: 0.3s;">
+                <div class="card-section-title">Recent Activity</div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">💊</div>
+                    <div>
+                        <div class="activity-title">Medication Reminder</div>
+                        <div class="activity-sub">Vitamin C</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">🛌</div>
+                    <div>
+                        <div class="activity-title">Time to rest</div>
+                        <div class="activity-sub">Daily sleep time: 6 hours</div>
+                    </div>
+                </div>
+
+                <div class="activity-item">
+                    <div class="activity-icon">⏱️</div>
+                    <div>
+                        <div class="activity-title">Duration of Sports Activity</div>
+                        <div class="activity-sub">45 minutes</div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </main>
+
+    <!-- Edit Profile Modal -->
+    <div id="editModal" style="display:none; position:fixed; top:0; left:0; width:100%; height:100%; background:rgba(0,0,0,0.4); z-index:9999; justify-content:center; align-items:center;">
+        <div style="background:white; border-radius:20px; padding:32px; width:100%; max-width:420px; box-shadow: 0 20px 60px rgba(0,0,0,0.2);">
+            <h3 style="margin-bottom:20px; font-size:1.1rem;" id="modalTitle">Edit</h3>
+            <input type="text" id="modalInput" style="width:100%; padding:12px 14px; border:2px solid #e2e8f0; border-radius:10px; font-size:0.95rem; font-family:'Poppins',sans-serif; outline:none; box-sizing:border-box;" placeholder="">
+            <div style="display:flex; gap:10px; margin-top:16px;">
+                <button onclick="saveField()" class="btn btn-primary" style="flex:1;">Save</button>
+                <button onclick="closeModal()" class="btn btn-outline" style="flex:1;">Cancel</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Platform Footer -->
+    <footer class="hs-platform-footer" style="margin-top: 48px;">
+        <div class="hs-footer-grid">
+            <div class="hs-footer-brand">
+                <span class="logo-text">Gnosia</span>
+                <p>Empowering your health through smart technology, trusted products, and personalized care on one integrated platform.</p>
+            </div>
+            <div class="hs-footer-col">
+                <h4>Platform</h4>
+                <ul>
+                    <li><a href="index.html">Home</a></li>
+                    <li><a href="health-store.html">Health Store</a></li>
+                    <li><a href="gfit.html">Gfit</a></li>
+                </ul>
+            </div>
+            <div class="hs-footer-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Contact</a></li>
+                    <li><a href="#">Careers</a></li>
+                </ul>
+            </div>
+            <div class="hs-footer-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Medical Disclaimer</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="hs-footer-bottom">&copy; 2026 Gnosia Team. All rights reserved.</div>
+    </footer>
+
+    <script src="script/script.js"></script>
+    <script>
+        const TIPS = [
+            "Drink at least 8 glasses of water a day to keep your body from dehydration.",
+            "Aim for at least 30 minutes of moderate exercise every day.",
+            "Get 7–9 hours of quality sleep each night for optimal health.",
+            "Eat a balanced diet rich in fruits, vegetables, and whole grains.",
+            "Practice deep breathing or meditation to reduce daily stress.",
+        ];
+
+        // ── Load user data from localStorage ──
+        function loadProfile() {
+            const email  = localStorage.getItem("userEmail") || "";
+            const name   = localStorage.getItem("userName")  || (email ? email.split("@")[0] : "User");
+            const phone  = localStorage.getItem("userPhone") || "";
+            const gender = localStorage.getItem("userGender") || "";
+            const age    = localStorage.getItem("userAge")   || "";
+            const height = localStorage.getItem("userHeight") || "—";
+            const weight = localStorage.getItem("userWeight") || "—";
+
+            // Welcome + banner name
+            document.getElementById("welcomeText").textContent = "Welcome, " + name + "!";
+            document.getElementById("profileName").textContent = name;
+
+            // Gender | Age
+            const sub = [gender, age ? age + " Years Old" : ""].filter(Boolean).join(" | ");
+            document.getElementById("profileSub").textContent = sub || "Complete your profile";
+
+            // Stats
+            document.getElementById("statHeight").textContent = height !== "—" ? height + " cm" : "—";
+            document.getElementById("statWeight").textContent = weight !== "—" ? weight + " kg"  : "—";
+
+            // BMI
+            if (height !== "—" && weight !== "—") {
+                const h = parseFloat(height) / 100;
+                const bmi = (parseFloat(weight) / (h * h)).toFixed(1);
+                document.getElementById("statBMI").textContent = bmi;
+            }
+
+            // Personal info
+            document.getElementById("displayEmail").textContent = email || "Not set";
+            document.getElementById("displayPhone").textContent = phone || "Not set";
+            document.getElementById("displayGender").textContent = sub || "Not set";
+        }
+
+        // ── Daily tip ──
+        const today = new Date().getDay();
+        document.getElementById("dailyTip").textContent = TIPS[today % TIPS.length];
+
+        // ── Modal ──
+        let currentField = "";
+        const fieldConfig = {
+            email:  { title: "Email Address",  key: "userEmail",  placeholder: "john@example.com" },
+            phone:  { title: "Phone Number",   key: "userPhone",  placeholder: "+62 8xx xxxx xxxx" },
+            gender: { title: "Gender & Age",   key: "userGender", placeholder: "Male" },
+        };
+
+        function editField(field) {
+            currentField = field;
+            const cfg = fieldConfig[field];
+            document.getElementById("modalTitle").textContent = "Edit " + cfg.title;
+            document.getElementById("modalInput").placeholder = cfg.placeholder;
+            document.getElementById("modalInput").value = localStorage.getItem(cfg.key) || "";
+            document.getElementById("editModal").style.display = "flex";
+            setTimeout(() => document.getElementById("modalInput").focus(), 100);
+        }
+
+        function saveField() {
+            const cfg = fieldConfig[currentField];
+            const val = document.getElementById("modalInput").value.trim();
+            if (val) localStorage.setItem(cfg.key, val);
+            closeModal();
+            loadProfile();
+        }
+
+        function closeModal() {
+            document.getElementById("editModal").style.display = "none";
+        }
+
+        // Close modal on backdrop click
+        document.getElementById("editModal").addEventListener("click", function(e) {
+            if (e.target === this) closeModal();
+        });
+
+        // ── Chat ──
+        function sendChat() {
+            const input = document.getElementById("chatInput");
+            const msg = input.value.trim();
+            if (!msg) return;
+
+            const container = document.getElementById("chatMessages");
+            const now = new Date();
+            const time = now.getHours().toString().padStart(2,"0") + "." + now.getMinutes().toString().padStart(2,"0");
+
+            const el = document.createElement("div");
+            el.className = "chat-msg user";
+            el.innerHTML = `<div class="chat-bubble">${msg}</div><div class="chat-time">${time}</div>`;
+            container.appendChild(el);
+            container.scrollTop = container.scrollHeight;
+            input.value = "";
+        }
+
+        loadProfile();
+    </script>
+</body>
+</html>

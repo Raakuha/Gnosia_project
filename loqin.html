@@ -3,165 +3,205 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Gnosia - Health Prediction</title>
+    <title>Sign In | Gnosia</title>
     <link rel="stylesheet" href="Assets/style.css">
+    <style>
+        .brand-side-features {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            margin-top: 40px;
+        }
+        .feature-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+        }
+        .feature-icon {
+            width: 40px; height: 40px;
+            border-radius: 10px;
+            background: rgba(255,255,255,0.2);
+            display: flex; align-items: center; justify-content: center;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+        .feature-text {
+            font-size: 0.9rem;
+            opacity: 0.9;
+            line-height: 1.4;
+        }
+        .divider {
+            display: flex; align-items: center; gap: 12px;
+            margin: 20px 0;
+        }
+        .divider::before, .divider::after {
+            content: ''; flex: 1; height: 1px; background: #e2e8f0;
+        }
+        .divider span { font-size: 0.8rem; color: #94a3b8; font-weight: 500; }
+
+        /* Alert box */
+        .alert-box {
+            padding: 12px 16px;
+            border-radius: 10px;
+            font-size: 0.85rem;
+            font-weight: 500;
+            margin-bottom: 20px;
+            display: none;
+        }
+        .alert-box.info {
+            background: #eff6ff;
+            color: #1d4ed8;
+            border: 1px solid #bfdbfe;
+            display: flex; align-items: center; gap: 8px;
+        }
+    </style>
 </head>
-<body style="background: #f8fafc;">
-    
-    <!-- Top Navigation -->
-    <nav>
-        <a href="index.html" class="logo">Gnosia</a>
-        <div style="display: flex; gap: 20px; align-items: center;">
-            <a href="index.html" style="text-decoration: none; color: var(--primary); font-weight: 600; border-bottom: 2px solid var(--primary); padding-bottom: 2px;">Home</a>
+<body>
+    <div class="split-screen">
 
-            <!-- Dashboard: hanya muncul saat sudah login, di kiri Gfit -->
-            <a href="dashboard.html" id="nav-dashboard" style="display: none; text-decoration: none; color: var(--text-dark); font-weight: 600;">Dashboard</a>
-
-            <!-- Link Gfit & Health Store: cek login dulu -->
-            <a href="#" onclick="guardedNav(event, 'gfit.html')" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Gfit</a>
-            <a href="#" onclick="guardedNav(event, 'health-store.html')" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Health Store</a>
-            
-            <!-- Tampil kalau BELUM login -->
-            <div id="nav-guest" style="display: flex; gap: 10px; align-items: center;">
-                <a href="loqin.html" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.9rem;">Sign In</a>
-                <a href="register.html" class="btn btn-primary" style="padding: 8px 15px; font-size: 0.9rem;">Join Now</a>
-            </div>
-
-            <!-- Tampil kalau SUDAH login -->
-            <div id="nav-user" style="display: none; gap: 15px; align-items: center;">
-                <span style="font-weight: 600;" id="greetUserIndex">Hello, User!</span>
-                <button onclick="handleLogout()" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.8rem;">Log Out</button>
-            </div>
-        </div>
-    </nav>
-
-    <!-- Hero Section -->
-    <header style="padding: 80px 8%; display: flex; align-items: center; min-height: 80vh;">
-        <div style="flex: 1;" class="animate-up">
-            <h1 style="font-size: 3.5rem; line-height: 1.2; margin-bottom: 20px;">Your Health,<br><span style="color: var(--primary);">Simplified.</span></h1>
-            <p style="font-size: 1.1rem; color: var(--text-light); margin-bottom: 40px; max-width: 500px;">
-                A smart platform for early disease prediction and personalized healthy lifestyle guidance.
+        <!-- Left Side: Brand -->
+        <div class="brand-side" style="background: linear-gradient(135deg, #1e3a8a 0%, #3b82f6 100%);">
+            <a href="index.html" style="font-size:1.8rem; font-weight:800; color:white; text-decoration:none; margin-bottom:32px; display:block;">Gnosia</a>
+            <h1 style="font-size: 2.8rem; line-height:1.2; margin-bottom: 16px;">Welcome Back.</h1>
+            <p style="font-size: 1rem; opacity: 0.85; max-width: 340px; line-height:1.6;">
+                Sign in to analyze your symptoms, track your health history, and get personalized medical guidance.
             </p>
-            
-            <!-- Search Box -->
-            <div style="display: flex; gap: 10px; background: white; padding: 10px; border-radius: 15px; box-shadow: var(--shadow); max-width: 500px;">
-                <input type="text" id="mainSearch" placeholder="Enter your symptoms (e.g., Fever)" style="flex: 1; border: none; padding: 10px; outline: none; font-size: 1rem;">
-                <button onclick="openSymptomPicker()" class="btn btn-outline" style="border-radius:10px; white-space:nowrap;">
-                    🩺 Pick Symptoms
-                </button>
-                <button onclick="handleSearch()" class="btn btn-primary" style="border-radius: 10px;">Analyze Now</button>
+            <div class="brand-side-features">
+                <div class="feature-row">
+                    <div class="feature-icon">🤖</div>
+                    <div class="feature-text">AI-powered disease prediction with 98%+ accuracy</div>
+                </div>
+                <div class="feature-row">
+                    <div class="feature-icon">📋</div>
+                    <div class="feature-text">Save and track your symptom history over time</div>
+                </div>
+                <div class="feature-row">
+                    <div class="feature-icon">👨‍⚕️</div>
+                    <div class="feature-text">Chat directly with verified medical professionals</div>
+                </div>
             </div>
-            
-            <!-- Result Area -->
-            <div id="searchResult" style="max-width: 500px; margin-top: 15px;"></div>
-        </div>
-        
-        <!-- Right Illustration -->
-        <div style="flex: 1; display: flex; justify-content: center;" class="animate-up">
-            <img src="https://images.unsplash.com/photo-1579684385127-1ef15d508118?q=80&w=800&auto=format&fit=crop" alt="Doctor checking patient" style="width: 100%; max-width: 450px; border-radius: 20px; box-shadow: var(--shadow); object-fit: cover;">
-        </div>
-    </header>
-
-    <!-- Ways of Working Section -->
-    <section style="padding: 80px 8%; text-align: center; background: white;">
-        <div class="animate-up">
-            <h2 style="font-size: 2.5rem; margin-bottom: 15px;">Ways of working</h2>
-            <p style="color: var(--text-light); max-width: 600px; margin: 0 auto 50px auto;">
-                Our 3-step process turns your symptoms into actionable health recommendations in less than a minute.
-            </p>
         </div>
 
-        <div class="card-grid">
-            <div class="stat-card animate-up" style="text-align: center; box-shadow: var(--shadow);">
-                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/medical-report-4993175-4161821.png" alt="Step 1" style="width: 120px; height: 120px; margin-bottom: 20px; object-fit: contain;">
-                <div style="background: #e0f2fe; color: var(--primary); padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 15px;">Step 1</div>
-                <h3 style="font-size: 1.2rem;">Input Symptoms</h3>
-                <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 10px;">Tell us what you are feeling right now in the search box.</p>
-            </div>
-            
-            <div class="stat-card animate-up" style="text-align: center; animation-delay: 0.1s; box-shadow: var(--shadow);">
-                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/artificial-intelligence-5379899-4498361.png" alt="Step 2" style="width: 120px; height: 120px; margin-bottom: 20px; object-fit: contain;">
-                <div style="background: #e0f2fe; color: var(--primary); padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 15px;">Step 2</div>
-                <h3 style="font-size: 1.2rem;">AI Analysis</h3>
-                <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 10px;">Our machine learning model analyzes your data securely.</p>
-            </div>
+        <!-- Right Side: Login Form -->
+        <div class="auth-side animate-up">
+            <div style="width: 100%; max-width: 400px;">
 
-            <div class="stat-card animate-up" style="text-align: center; animation-delay: 0.2s; box-shadow: var(--shadow);">
-                <img src="https://cdn3d.iconscout.com/3d/premium/thumb/doctor-consultation-4993181-4161827.png" alt="Step 3" style="width: 120px; height: 120px; margin-bottom: 20px; object-fit: contain;">
-                <div style="background: #e0f2fe; color: var(--primary); padding: 5px 15px; border-radius: 20px; font-weight: bold; display: inline-block; margin-bottom: 15px;">Step 3</div>
-                <h3 style="font-size: 1.2rem;">Get Recommendation</h3>
-                <p style="color: var(--text-light); font-size: 0.9rem; margin-top: 10px;">Receive personalized medicine and lifestyle advice.</p>
+                <!-- Logo mobile -->
+                <a href="index.html" style="display:none; font-size:1.5rem; font-weight:800; color:var(--primary); text-decoration:none; margin-bottom:24px;">Gnosia</a>
+
+                <h2 style="font-size: 2rem; margin-bottom: 6px;">Sign In</h2>
+                <p style="color: var(--text-light); margin-bottom: 28px; font-size:0.9rem;">
+                    Don't have an account?
+                    <a href="register.html" style="color: var(--primary); font-weight: 700; text-decoration: none;">Create one here →</a>
+                </p>
+
+                <!-- Info redirect -->
+                <div class="alert-box info" id="redirectAlert">
+                    🔒 Please sign in to analyze your symptoms.
+                </div>
+
+                <form onsubmit="handleAuth(event)">
+                    <div class="input-box">
+                        <label>Email Address</label>
+                        <input type="email" id="loginEmail" placeholder="you@example.com" required>
+                    </div>
+
+                    <div class="input-box">
+                        <label>Password</label>
+                        <div style="position:relative;">
+                            <input type="password" id="loginPassword" placeholder="Enter your password" required style="padding-right:44px;">
+                            <button type="button" onclick="togglePassword()" style="
+                                position:absolute; right:12px; top:50%; transform:translateY(-50%);
+                                background:none; border:none; cursor:pointer; color:#94a3b8; font-size:1rem;
+                                padding:0; display:flex; align-items:center;" id="eyeBtn">👁️</button>
+                        </div>
+                    </div>
+
+                    <div style="display:flex; justify-content:flex-end; margin: -4px 0 20px;">
+                        <a href="forgot-password.html" style="font-size:0.82rem; color:var(--text-light); text-decoration:none; font-weight:500;"
+                           onmouseover="this.style.color='var(--primary)'" onmouseout="this.style.color='var(--text-light)'">
+                            Forgot password?
+                        </a>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" style="width: 100%; font-size:0.95rem; padding:14px;">
+                        Sign In
+                    </button>
+                </form>
+
+                <div class="divider"><span>or continue with</span></div>
+
+                <div style="display:flex; gap:10px;">
+                    <button onclick="alert('Google login coming soon!')" style="
+                        flex:1; padding:11px; border:1.5px solid #e2e8f0; border-radius:10px;
+                        background:white; cursor:pointer; font-size:0.85rem; font-weight:600;
+                        color:#374151; display:flex; align-items:center; justify-content:center; gap:8px;
+                        font-family:inherit; transition:all 0.2s;"
+                        onmouseover="this.style.borderColor='#3b82f6'; this.style.background='#eff6ff'"
+                        onmouseout="this.style.borderColor='#e2e8f0'; this.style.background='white'">
+                        <img src="https://www.svgrepo.com/show/475656/google-color.svg" width="16" height="16" alt="Google"> Google
+                    </button>
+                    <button onclick="alert('Apple login coming soon!')" style="
+                        flex:1; padding:11px; border:1.5px solid #e2e8f0; border-radius:10px;
+                        background:white; cursor:pointer; font-size:0.85rem; font-weight:600;
+                        color:#374151; display:flex; align-items:center; justify-content:center; gap:8px;
+                        font-family:inherit; transition:all 0.2s;"
+                        onmouseover="this.style.borderColor='#374151'; this.style.background='#f8fafc'"
+                        onmouseout="this.style.borderColor='#e2e8f0'; this.style.background='white'">
+                        🍎 Apple
+                    </button>
+                </div>
+
+                <p style="margin-top:28px; text-align:center; font-size:0.78rem; color:#94a3b8; line-height:1.6;">
+                    By signing in, you agree to our
+                    <a href="#" style="color:var(--primary); text-decoration:none;">Terms of Service</a> and
+                    <a href="#" style="color:var(--primary); text-decoration:none;">Privacy Policy</a>.
+                </p>
+
             </div>
         </div>
-    </section>
-
-    <!-- Platform Footer -->
-    <footer class="hs-platform-footer">
-        <div class="hs-footer-grid">
-            <div class="hs-footer-brand">
-                <span class="logo-text">Gnosia</span>
-                <p>Empowering your health through smart technology, trusted products, and personalized care on one integrated platform.</p>
-            </div>
-            <div class="hs-footer-col">
-                <h4>Platform</h4>
-                <ul>
-                    <li><a href="index.html">Home</a></li>
-                    <li><a href="dashboard.html">Dashboard</a></li>
-                    <li><a href="health-store.html">Health Store</a></li>
-                    <li><a href="gfit.html">Gfit</a></li>
-                </ul>
-            </div>
-            <div class="hs-footer-col">
-                <h4>Company</h4>
-                <ul>
-                    <li><a href="#">About Us</a></li>
-                    <li><a href="#">Contact</a></li>
-                    <li><a href="#">Careers</a></li>
-                    <li><a href="#">Partners</a></li>
-                </ul>
-            </div>
-            <div class="hs-footer-col">
-                <h4>Legal</h4>
-                <ul>
-                    <li><a href="#">Privacy Policy</a></li>
-                    <li><a href="#">Terms of Service</a></li>
-                    <li><a href="#">Medical Disclaimer</a></li>
-                    <li><a href="#">Cookie Policy</a></li>
-                </ul>
-            </div>
-        </div>
-        <div class="hs-footer-bottom">&copy; 2026 Gnosia Team. All rights reserved.</div>
-    </footer>
+    </div>
 
     <script src="script/script.js"></script>
     <script>
-        // Fungsi navigasi dengan cek login
-        function guardedNav(event, page) {
-            event.preventDefault();
-            if (localStorage.getItem("isLoggedIn")) {
-                window.location.href = page;
+        // Tampilkan alert kalau user di-redirect dari Analyze
+        const redirectTarget = localStorage.getItem("redirectAfterLogin");
+        if (redirectTarget) {
+            document.getElementById("redirectAlert").style.display = "flex";
+        }
+
+        // Show/hide password
+        function togglePassword() {
+            const input = document.getElementById("loginPassword");
+            const btn   = document.getElementById("eyeBtn");
+            if (input.type === "password") {
+                input.type = "text";
+                btn.textContent = "🙈";
             } else {
-                // Simpan tujuan, lalu arahkan ke login
-                localStorage.setItem("redirectAfterLogin", page);
-                window.location.href = "loqin.html";
+                input.type = "password";
+                btn.textContent = "👁️";
             }
         }
 
-        // Cek status login dan update navbar
-        const isLoggedIn = localStorage.getItem("isLoggedIn");
-        const navGuest   = document.getElementById("nav-guest");
-        const navUser    = document.getElementById("nav-user");
-
-        if (isLoggedIn) {
-            navGuest.style.display = "none";
-            navUser.style.display  = "flex";
-            document.getElementById("nav-dashboard").style.display = "block";
-            const email = localStorage.getItem("userEmail");
-            if (email) {
-                const name = email.split("@")[0];
-                document.getElementById("greetUserIndex").textContent = "Hello, " + name + "!";
+        // Override handleAuth untuk redirect ke tujuan semula
+        const _origHandleAuth = window.handleAuth;
+        window.handleAuth = function(event) {
+            event.preventDefault();
+            const pw = document.getElementById("loginPassword");
+            if (pw && pw.value.length < 8) {
+                alert("Password must be at least 8 characters long!");
+                return;
             }
-        }
+            const emailInput = document.getElementById("loginEmail");
+            const email = emailInput ? emailInput.value : "user@example.com";
+            localStorage.setItem("isLoggedIn", "true");
+            localStorage.setItem("userEmail", email);
+
+            // Redirect ke halaman asal kalau ada, atau ke dashboard
+            const redirect = localStorage.getItem("redirectAfterLogin");
+            localStorage.removeItem("redirectAfterLogin");
+            window.location.href = redirect || "dashboard.html";
+        };
     </script>
 </body>
 </html>

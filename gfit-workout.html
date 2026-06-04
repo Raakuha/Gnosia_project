@@ -1,0 +1,551 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>30 Minute Home Workout | Gnosia Gfit</title>
+    <link rel="stylesheet" href="Assets/style.css">
+    <style>
+        * { box-sizing: border-box; }
+
+        /* ── Nav profile btn ── */
+        .nav-profile-btn {
+            width: 36px; height: 36px; border-radius: 50%;
+            background: var(--primary); display: flex;
+            align-items: center; justify-content: center;
+            color: white; text-decoration: none;
+            transition: background 0.2s, transform 0.2s; flex-shrink: 0;
+        }
+        .nav-profile-btn:hover { background: var(--primary-dark); transform: scale(1.05); }
+
+        /* ── Hero ── */
+        .workout-hero {
+            position: relative;
+            width: 100%;
+            height: 460px;
+            overflow: hidden;
+        }
+        .workout-hero img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            object-position: center 30%;
+        }
+        .workout-hero-overlay {
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(to right, rgba(10,20,60,0.82) 45%, rgba(10,20,60,0.2));
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            padding: 0 8%;
+        }
+        .fitness-badge {
+            display: inline-flex;
+            align-items: center;
+            background: var(--primary);
+            color: white;
+            font-size: 0.72rem;
+            font-weight: 700;
+            letter-spacing: 0.08em;
+            padding: 5px 14px;
+            border-radius: 20px;
+            margin-bottom: 20px;
+            width: fit-content;
+        }
+        .workout-hero h1 {
+            font-size: 3rem;
+            font-weight: 800;
+            color: white;
+            line-height: 1.15;
+            margin-bottom: 16px;
+            max-width: 520px;
+        }
+        .workout-hero p {
+            font-size: 0.95rem;
+            color: rgba(255,255,255,0.8);
+            max-width: 460px;
+            line-height: 1.7;
+        }
+
+        /* ── Section wrapper ── */
+        .section { padding: 60px 8%; }
+        .section-title {
+            font-size: 1.7rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        .section-sub {
+            font-size: 0.9rem;
+            color: var(--text-light);
+            margin-bottom: 36px;
+        }
+
+        /* ── What do you need ── */
+        .needs-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+        .need-card {
+            background: white;
+            border-radius: 16px;
+            padding: 32px 24px;
+            text-align: center;
+            box-shadow: 0 2px 16px rgba(0,0,0,0.06);
+            transition: transform 0.25s, box-shadow 0.25s;
+        }
+        .need-card:hover { transform: translateY(-4px); box-shadow: 0 8px 28px rgba(59,130,246,0.12); }
+        .need-card.highlighted { background: #eff6ff; border: 2px solid #bfdbfe; }
+        .need-icon {
+            width: 54px; height: 54px;
+            background: #eff6ff;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            margin: 0 auto 16px;
+            color: var(--primary);
+        }
+        .need-card h4 {
+            font-size: 0.95rem;
+            font-weight: 700;
+            color: var(--text-dark);
+            margin-bottom: 8px;
+        }
+        .need-card p {
+            font-size: 0.82rem;
+            color: var(--text-light);
+            line-height: 1.6;
+        }
+
+        /* ── Exercise Sequence ── */
+        .sequence-section { background: #f8fafc; padding: 60px 8%; }
+        .sequence-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+        .duration-badge {
+            background: #e0e7ff;
+            color: #3730a3;
+            font-size: 0.78rem;
+            font-weight: 700;
+            padding: 6px 16px;
+            border-radius: 20px;
+            flex-shrink: 0;
+        }
+
+        /* Exercise row — alternating left/right */
+        .exercise-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 40px;
+            align-items: center;
+            margin-bottom: 56px;
+        }
+        .exercise-row.reverse { direction: rtl; }
+        .exercise-row.reverse > * { direction: ltr; }
+
+        .exercise-img {
+            width: 100%;
+            height: 260px;
+            object-fit: cover;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+        .exercise-info { padding: 8px 0; }
+        .exercise-num {
+            width: 34px; height: 34px;
+            background: #1e3a8a;
+            color: white;
+            border-radius: 50%;
+            display: flex; align-items: center; justify-content: center;
+            font-size: 0.85rem;
+            font-weight: 700;
+            margin-bottom: 12px;
+        }
+        .exercise-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            padding: 3px 10px;
+            border-radius: 10px;
+            margin-bottom: 12px;
+        }
+        .tag-warmup    { background: #d1fae5; color: #065f46; }
+        .tag-leg       { background: #d1fae5; color: #065f46; }
+        .tag-upper     { background: #d1fae5; color: #065f46; }
+        .tag-core      { background: #d1fae5; color: #065f46; }
+        .tag-cooldown  { background: #d1fae5; color: #065f46; }
+
+        .exercise-info h3 {
+            font-size: 1.6rem;
+            font-weight: 800;
+            color: var(--text-dark);
+            margin-bottom: 12px;
+            line-height: 1.2;
+        }
+        .exercise-info p {
+            font-size: 0.88rem;
+            color: var(--text-light);
+            line-height: 1.7;
+            margin-bottom: 20px;
+        }
+        .exercise-meta {
+            display: flex;
+            gap: 32px;
+        }
+        .meta-item label {
+            display: block;
+            font-size: 0.7rem;
+            font-weight: 700;
+            letter-spacing: 0.06em;
+            color: var(--text-light);
+            margin-bottom: 4px;
+            text-transform: uppercase;
+        }
+        .meta-item span {
+            font-size: 0.9rem;
+            font-weight: 700;
+            color: var(--primary);
+        }
+
+        /* ── Pro Tips ── */
+        .pro-tips {
+            background: linear-gradient(135deg, #1e3a8a 0%, #2563eb 100%);
+            border-radius: 20px;
+            padding: 48px;
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 40px;
+            align-items: center;
+            margin: 0 8% 60px;
+        }
+        .pro-tips h2 {
+            font-size: 2rem;
+            font-weight: 800;
+            color: white;
+            margin-bottom: 14px;
+            line-height: 1.2;
+        }
+        .pro-tips .intro {
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.7);
+            margin-bottom: 24px;
+            line-height: 1.6;
+        }
+        .tip-item {
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.9);
+            margin-bottom: 12px;
+            line-height: 1.5;
+        }
+        .tip-item strong { color: white; }
+        .pro-tips-img {
+            width: 260px;
+            height: 240px;
+            object-fit: cover;
+            border-radius: 16px;
+            flex-shrink: 0;
+        }
+
+        /* ── Custom footer ── */
+        .workout-footer {
+            background: #1e3a8a;
+            color: #c7d7f5;
+            padding: 40px 8% 24px;
+        }
+        .wf-grid {
+            display: grid;
+            grid-template-columns: 1.2fr repeat(3,1fr);
+            gap: 40px;
+            max-width: 1200px;
+            margin: 0 auto 32px;
+        }
+        .wf-brand {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+        .wf-brand-icon {
+            width: 28px; height: 28px;
+            background: var(--primary);
+            border-radius: 8px;
+            display: flex; align-items: center; justify-content: center;
+            color: white; font-size: 0.9rem; flex-shrink: 0; margin-top: 2px;
+        }
+        .wf-brand-text .name { font-size: 1rem; font-weight: 700; color: white; }
+        .wf-brand-text .desc { font-size: 0.78rem; color: #93c5fd; margin-top: 6px; line-height: 1.5; }
+        .wf-col h4 {
+            font-size: 0.78rem; font-weight: 700; text-transform: uppercase;
+            letter-spacing: 0.08em; color: white; margin-bottom: 14px;
+        }
+        .wf-col ul { list-style: none; }
+        .wf-col li { margin-bottom: 8px; }
+        .wf-col a { color: #93c5fd; text-decoration: none; font-size: 0.85rem; transition: color 0.2s; }
+        .wf-col a:hover { color: white; }
+        .wf-bottom {
+            text-align: center; padding-top: 20px;
+            border-top: 1px solid rgba(255,255,255,0.1);
+            font-size: 0.8rem; color: #64a0e4;
+        }
+
+        @media (max-width: 768px) {
+            .workout-hero h1 { font-size: 2rem; }
+            .needs-grid { grid-template-columns: 1fr; }
+            .exercise-row { grid-template-columns: 1fr; }
+            .exercise-row.reverse { direction: ltr; }
+            .pro-tips { grid-template-columns: 1fr; }
+            .pro-tips-img { width: 100%; height: 200px; }
+            .wf-grid { grid-template-columns: 1fr 1fr; }
+        }
+    </style>
+</head>
+
+<script>
+    if (!localStorage.getItem("isLoggedIn")) {
+        window.location.href = "loqin.html";
+    }
+</script>
+
+<body style="background: #f8fafc;">
+
+    <!-- Navigation -->
+    <nav>
+        <a href="index.html" class="logo">Gnosia</a>
+        <div style="display: flex; align-items: center; gap: 20px;">
+            <a href="index.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Home</a>
+            <a href="health-store.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Health Store</a>
+            <a href="gfit.html" style="text-decoration: none; color: var(--primary); font-weight: 600; border-bottom: 2px solid var(--primary); padding-bottom: 2px;">Gfit</a>
+            <a href="Chat.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Chat</a>
+            <a href="profile.html" class="nav-profile-btn" title="Profile">
+                <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+                    <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+                </svg>
+            </a>
+        </div>
+    </nav>
+
+    <!-- Hero -->
+    <div class="workout-hero animate-up">
+        <img src="https://images.unsplash.com/photo-1571019613454-1cb2f99b2d8b?q=80&w=1400&auto=format&fit=crop" alt="Home Workout">
+        <div class="workout-hero-overlay">
+            <span class="fitness-badge">FITNESS GUIDE</span>
+            <h1>30 Minute Home Workout</h1>
+            <p>Boost your vitality with precision routines designed to burn calories and strengthen core muscles without the need for expensive equipment. Efficient, clinical, and measurable.</p>
+        </div>
+    </div>
+
+    <!-- What do you need -->
+    <div class="section animate-up">
+        <h2 class="section-title">What do you need?</h2>
+        <div class="needs-grid">
+            <div class="need-card">
+                <div class="need-icon">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M3 3h7v7H3zM3 14h7v7H3zM14 3h7v7h-7z"/>
+                        <path d="M14 17.5h7M17.5 14v7" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h4>2x2 Meter Space</h4>
+                <p>Enough space to move freely without obstruction.</p>
+            </div>
+            <div class="need-card highlighted">
+                <div class="need-icon">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <path d="M12 2a5 5 0 015 5v1a5 5 0 01-10 0V7a5 5 0 015-5z"/>
+                        <path d="M12 13v9M8 22h8" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h4>Drinking Bottles</h4>
+                <p>Staying hydrated is key to peak performance during training.</p>
+            </div>
+            <div class="need-card">
+                <div class="need-icon">
+                    <svg width="24" height="24" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24">
+                        <rect x="2" y="7" width="20" height="10" rx="2"/>
+                        <path d="M6 7V5a2 2 0 012-2h8a2 2 0 012 2v2" stroke-linecap="round"/>
+                    </svg>
+                </div>
+                <h4>Yoga Mat</h4>
+                <p>Optional, for joint comfort when performing floor exercises.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Exercise Sequence -->
+    <div class="sequence-section">
+        <div class="sequence-header">
+            <div>
+                <h2 class="section-title" style="margin-bottom:6px;">Exercise Sequence</h2>
+                <p class="section-sub" style="margin-bottom:0;">Follow these 5 basic movements for optimal results. Perform each movement with complete control.</p>
+            </div>
+            <span class="duration-badge">Total Duration: 30 Minutes</span>
+        </div>
+        <div style="height:36px;"></div>
+
+        <!-- 1. Jumping Jacks -->
+        <div class="exercise-row animate-up">
+            <img class="exercise-img" src="https://images.unsplash.com/photo-1601422407692-ec4eeec1d9b3?q=80&w=800&auto=format&fit=crop" alt="Jumping Jacks">
+            <div class="exercise-info">
+                <div class="exercise-num">1</div>
+                <span class="exercise-tag tag-warmup">WARMUP</span>
+                <h3>Jumping Jacks</h3>
+                <p>Start with light cardio to increase your heart rate and blood circulation throughout your body. Make sure your hands are touching above your head.</p>
+                <div class="exercise-meta">
+                    <div class="meta-item">
+                        <label>Duration</label>
+                        <span>3 Minutes</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>Intensity</label>
+                        <span>Low</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 2. Bodyweight Squats -->
+        <div class="exercise-row reverse animate-up">
+            <img class="exercise-img" src="https://images.unsplash.com/photo-1574680096145-d05b474e2155?q=80&w=800&auto=format&fit=crop" alt="Squats">
+            <div class="exercise-info">
+                <div class="exercise-num">2</div>
+                <span class="exercise-tag tag-leg">LEG STRENGTH</span>
+                <h3>Bodyweight Squats</h3>
+                <p>Strengthen your thigh and glute muscles. Keep your back straight and make sure your knees don't go past your toes as you lower.</p>
+                <div class="exercise-meta">
+                    <div class="meta-item">
+                        <label>Repetition</label>
+                        <span>3 Sets x 15</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>Intensity</label>
+                        <span>Medium</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 3. Standard Push-Ups -->
+        <div class="exercise-row animate-up">
+            <img class="exercise-img" src="https://images.unsplash.com/photo-1598971861713-54ad16a7e72e?q=80&w=800&auto=format&fit=crop" alt="Push Ups">
+            <div class="exercise-info">
+                <div class="exercise-num">3</div>
+                <span class="exercise-tag tag-upper">UPPER BODY</span>
+                <h3>Standard Push-Ups</h3>
+                <p>Focus on your chest, shoulders, and triceps. If this is too difficult, you can place your knees on the floor as a modification.</p>
+                <div class="exercise-meta">
+                    <div class="meta-item">
+                        <label>Repetition</label>
+                        <span>3 Sets x 12</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>Intensity</label>
+                        <span>High</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 4. Forearm Plank -->
+        <div class="exercise-row reverse animate-up">
+            <img class="exercise-img" src="https://images.unsplash.com/photo-1566241142559-40e1dab266c6?q=80&w=800&auto=format&fit=crop" alt="Plank">
+            <div class="exercise-info">
+                <div class="exercise-num">4</div>
+                <span class="exercise-tag tag-core">CORE MUSCLES</span>
+                <h3>Forearm Plank</h3>
+                <p>Hold this position to build core stability. Be careful not to drop or raise your hips too high.</p>
+                <div class="exercise-meta">
+                    <div class="meta-item">
+                        <label>Duration</label>
+                        <span>1 Minute</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>Intensity</label>
+                        <span>Medium</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 5. Full Body Stretch -->
+        <div class="exercise-row animate-up" style="margin-bottom:0;">
+            <img class="exercise-img" src="https://images.unsplash.com/photo-1552196563-55cd4e45efb3?q=80&w=800&auto=format&fit=crop" alt="Stretch">
+            <div class="exercise-info">
+                <div class="exercise-num">5</div>
+                <span class="exercise-tag tag-cooldown">COOLING DOWN</span>
+                <h3>Full Body Stretch</h3>
+                <p>Finish with static stretching to aid muscle recovery and prevent injury after an intense workout.</p>
+                <div class="exercise-meta">
+                    <div class="meta-item">
+                        <label>Duration</label>
+                        <span>5 Minutes</span>
+                    </div>
+                    <div class="meta-item">
+                        <label>Intensity</label>
+                        <span>Low</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pro Tips -->
+    <div style="padding: 60px 0 0;">
+        <div class="pro-tips animate-up">
+            <div>
+                <h2>Pro Tips: Performance &amp; Precision</h2>
+                <p class="intro">Get maximum results by paying attention to the small but crucial details in every movement.</p>
+                <p class="tip-item"><strong>1.) Breathe Correctly:</strong> Exhale during the hardest part of the movement (exertion).</p>
+                <p class="tip-item"><strong>2.) Quality over Quantity:</strong> It's better to do 5 perfect squats than 15 messy ones.</p>
+                <p class="tip-item"><strong>3.) Mind-Muscle Focus:</strong> Feel the muscles working for better muscle fiber activation.</p>
+            </div>
+            <img class="pro-tips-img" src="https://images.unsplash.com/photo-1544367567-0f2fcb009e0b?q=80&w=600&auto=format&fit=crop" alt="Pro Tips">
+        </div>
+    </div>
+
+    <!-- Footer -->
+    <footer class="workout-footer">
+        <div class="wf-grid">
+            <div>
+                <div class="wf-brand">
+                    <div class="wf-brand-icon">+</div>
+                    <div class="wf-brand-text">
+                        <div class="name">Gnosia</div>
+                        <div class="desc">Advanced symptom checker and health companion. Not a substitute for professional medical advice.</div>
+                    </div>
+                </div>
+            </div>
+            <div class="wf-col">
+                <h4>Platform</h4>
+                <ul>
+                    <li><a href="index.html">Symptom Checker</a></li>
+                    <li><a href="Chat.html">Find a Doctor</a></li>
+                    <li><a href="health-store.html">Medicine Directory</a></li>
+                </ul>
+            </div>
+            <div class="wf-col">
+                <h4>Company</h4>
+                <ul>
+                    <li><a href="#">About Us</a></li>
+                    <li><a href="#">Career</a></li>
+                    <li><a href="#">Contact</a></li>
+                </ul>
+            </div>
+            <div class="wf-col">
+                <h4>Legal</h4>
+                <ul>
+                    <li><a href="#">Privacy Policy</a></li>
+                    <li><a href="#">Terms of Service</a></li>
+                    <li><a href="#">Apology</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="wf-bottom">&copy; 2026 Gnosia. All rights reserved.</div>
+    </footer>
+
+    <script src="script/script.js"></script>
+</body>
+</html> 

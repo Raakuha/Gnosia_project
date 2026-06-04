@@ -352,3 +352,24 @@ nav a:not(.btn):not(.logo):hover {
 .pm-row.pm-warning { background:#fff7ed; }
 .pm-label { font-size:0.75rem; font-weight:700; text-transform:uppercase; letter-spacing:0.05em; color:#64748b; }
 .pm-val { font-size:0.9rem; color:#1e293b; line-height:1.6; }
+
+
+.nav-profile-btn {
+    width: 36px;
+    height: 36px;
+    border-radius: 50%;
+    background: var(--primary);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    cursor: pointer;
+    border: none;
+    text-decoration: none;
+    transition: background 0.2s, transform 0.2s;
+    flex-shrink: 0;
+}
+.nav-profile-btn:hover {
+    background: var(--primary-dark);
+    transform: scale(1.05);
+}

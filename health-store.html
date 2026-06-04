@@ -136,12 +136,7 @@
     </style>
 </head>
 
-<!-- AUTH GUARD -->
-<script>
-    if (!localStorage.getItem("isLoggedIn")) {
-        window.location.href = "loqin.html";
-    }
-</script>
+
 
 <body class="health-store-page">
 
@@ -150,12 +145,16 @@
         <a href="index.html" class="logo">Gnosia</a>
         <div style="display: flex; gap: 20px; align-items: center;">
             <a href="index.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Home</a>
-            <a href="dashboard.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Dashboard</a>
             <a href="gfit.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Gfit</a>
             <a href="health-store.html" style="text-decoration: none; color: var(--primary); font-weight: 600; border-bottom: 2px solid var(--primary); padding-bottom: 2px;">Health Store</a>
 
-            <span style="font-weight: 600; margin-left: 10px;" id="greetUserStore">Hello, User!</span>
+           <a href="Chat.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Chat</a>
             <button onclick="handleLogout()" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.8rem;">Log Out</button>
+            <a href="profile.html" class="nav-profile-btn" title="Profile">
+    <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
+        <path d="M12 12c2.7 0 4.8-2.1 4.8-4.8S14.7 2.4 12 2.4 7.2 4.5 7.2 7.2 9.3 12 12 12zm0 2.4c-3.2 0-9.6 1.6-9.6 4.8v2.4h19.2v-2.4c0-3.2-6.4-4.8-9.6-4.8z"/>
+    </svg>
+</a>
         </div>
     </nav>
 
@@ -180,21 +179,21 @@
                     <img src="Assets/images/weight_dv.png" alt="DV Weight Loss for Women" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>DV Weight Loss for Women</h3>
                     <p class="hs-product-desc">Targeted nutritional support for women pursuing healthy weight goals, with vitamins and botanicals to complement balanced diet and activity.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 425.000</span><button type="button" class="btn-more-info" onclick="openProductModal('weight-dv')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 425.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('weight-dv')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge hs-badge--rec">Recommended</span>
                     <img src="Assets/images/weight_nutrishake.png" alt="Nutri Shake" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Nutri Shake</h3>
                     <p class="hs-product-desc">Meal-replacement shake with balanced macronutrients and fiber to support portion control and daily calorie management.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 289.000</span><button type="button" class="btn-more-info" onclick="openProductModal('weight-nutrishake')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 289.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('weight-nutrishake')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge hs-badge--new">New Arrival</span>
                     <img src="Assets/images/weight_lean.png" alt="Lean Shake Burn" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Lean Shake Burn</h3>
                     <p class="hs-product-desc">High-protein thermogenic shake formula designed to support metabolism and lean body composition during training programs.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 365.000</span><button type="button" class="btn-more-info" onclick="openProductModal('weight-lean')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 365.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('weight-lean')">More Info</button></div>
                 </article>
             </div>
         </section>
@@ -208,21 +207,21 @@
                     <img src="Assets/images/med_theraflu.png" alt="Theraflu-D Nighttime Severe Cold" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Theraflu-D Nighttime Severe Cold</h3>
                     <p class="hs-product-desc">Multi-symptom nighttime cold and flu relief with acetaminophen and antihistamine to reduce fever, congestion, and body aches.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 185.000</span><button type="button" class="btn-more-info" onclick="openProductModal('med-theraflu')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 185.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('med-theraflu')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge hs-badge--rec">Recommended</span>
                     <img src="Assets/images/med_gaviscon.png" alt="Gaviscon" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Gaviscon</h3>
                     <p class="hs-product-desc">Alginate antacid suspension that forms a protective barrier to relieve heartburn and acid indigestion after meals.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 142.000</span><button type="button" class="btn-more-info" onclick="openProductModal('med-gaviscon')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 142.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('med-gaviscon')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge">Popular</span>
                     <img src="Assets/images/med_custom.png" alt="Mucinex DM Extended Release" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Mucinex DM Extended Release</h3>
                     <p class="hs-product-desc">Expectorant and cough suppressant for chest congestion and persistent cough associated with upper respiratory infections.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 198.000</span><button type="button" class="btn-more-info" onclick="openProductModal('med-mucinex')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 198.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('med-mucinex')">More Info</button></div>
                 </article>
             </div>
         </section>
@@ -236,21 +235,21 @@
                     <img src="Assets/images/mental_moodjoy.png" alt="Bio Nutrition Mood Joy" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Bio Nutrition Mood Joy</h3>
                     <p class="hs-product-desc">Herbal and nutrient blend formulated to support emotional balance, stress resilience, and a positive mood throughout the day.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 312.000</span><button type="button" class="btn-more-info" onclick="openProductModal('mental-moodjoy')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 312.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('mental-moodjoy')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge hs-badge--seller">Top Seller</span>
                     <img src="Assets/images/mental_moringa.png" alt="BioPro Wellness Moringa Pure 2400" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>BioPro Wellness Moringa Pure 2400</h3>
                     <p class="hs-product-desc">Concentrated moringa leaf extract rich in antioxidants and micronutrients to support mental clarity and overall vitality.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 275.000</span><button type="button" class="btn-more-info" onclick="openProductModal('mental-moringa')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 275.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('mental-moringa')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge hs-badge--new">New Arrival</span>
                     <img src="Assets/images/mental_sleep.png" alt="Sleep Formula 5-HTP" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Sleep Formula 5-HTP</h3>
                     <p class="hs-product-desc">5-HTP supplement to support serotonin production, relaxation, and restorative sleep as part of a healthy bedtime routine.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 248.000</span><button type="button" class="btn-more-info" onclick="openProductModal('mental-sleep')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 248.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('mental-sleep')">More Info</button></div>
                 </article>
             </div>
         </section>
@@ -264,21 +263,21 @@
                     <img src="Assets/images/vit_naturelo.png" alt="Naturelo One Daily Multivitamin" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Naturelo One Daily Multivitamin</h3>
                     <p class="hs-product-desc">Whole-food-based daily multivitamin with bioavailable vitamins and minerals for comprehensive nutritional support.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 520.000</span><button type="button" class="btn-more-info" onclick="openProductModal('vit-naturelo')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 520.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('vit-naturelo')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge hs-badge--rec">Recommended</span>
                     <img src="Assets/images/vit_omega3.png" alt="XXL Nutrition Omega 3" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>XXL Nutrition Omega 3</h3>
                     <p class="hs-product-desc">High-potency fish oil delivering EPA and DHA for heart health, brain function, and anti-inflammatory balance.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 345.000</span><button type="button" class="btn-more-info" onclick="openProductModal('vit-omega3')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 345.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('vit-omega3')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge">Best Value</span>
                     <img src="Assets/images/vit_custom.png" alt="Solgar Vitamin D3 2000 IU" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Solgar Vitamin D3 2000 IU</h3>
                     <p class="hs-product-desc">Cholecalciferol softgels to maintain bone density, immune defense, and calcium metabolism in adults with limited sun exposure.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 198.000</span><button type="button" class="btn-more-info" onclick="openProductModal('vit-d3')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 198.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('vit-d3')">More Info</button></div>
                 </article>
             </div>
         </section>
@@ -292,21 +291,21 @@
                     <img src="Assets/images/immune_canprev.png" alt="CanPrev Pro-Biotik" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>CanPrev Pro-Biotik</h3>
                     <p class="hs-product-desc">Multi-strain probiotic supplement to support gut microbiome balance during therapy and immune-related treatments.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 465.000</span><button type="button" class="btn-more-info" onclick="openProductModal('immune-canprev')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 465.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('immune-canprev')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge hs-badge--seller">Top Seller</span>
                     <img src="Assets/images/immune_progressive.png" alt="Progressive Immuno Daily Support" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Progressive Immuno Daily Support</h3>
                     <p class="hs-product-desc">Daily immune-modulating formula with vitamins, minerals, and botanicals for patients requiring ongoing immunological care.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 398.000</span><button type="button" class="btn-more-info" onclick="openProductModal('immune-progressive')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 398.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('immune-progressive')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge hs-badge--new">New Arrival</span>
                     <img src="Assets/images/immune_promera.png" alt="Promera Health Immune Support" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Promera Health Immune Support</h3>
                     <p class="hs-product-desc">Targeted immune support blend with colostrum and key nutrients to help maintain defenses during recovery periods.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 542.000</span><button type="button" class="btn-more-info" onclick="openProductModal('immune-promera')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 542.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('immune-promera')">More Info</button></div>
                 </article>
             </div>
         </section>
@@ -320,21 +319,21 @@
                     <img src="Assets/images/sport_whey.png" alt="100% Pure Whey Protein" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>100% Pure Whey Protein</h3>
                     <p class="hs-product-desc">Premium whey concentrate for post-workout muscle repair, lean mass development, and daily protein requirements.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 625.000</span><button type="button" class="btn-more-info" onclick="openProductModal('sport-whey')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 625.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('sport-whey')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge hs-badge--rec">Recommended</span>
                     <img src="Assets/images/sport_nitric.png" alt="Nitric Boost Ultra" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Nitric Boost Ultra</h3>
                     <p class="hs-product-desc">Nitric oxide precursor formula to enhance blood flow, training performance, and muscular pump during exercise.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 478.000</span><button type="button" class="btn-more-info" onclick="openProductModal('sport-nitric')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 478.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('sport-nitric')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge hs-badge--new">New Arrival</span>
                     <img src="Assets/images/sport_custom.png" alt="Creatine Monohydrate Pure Powder" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Creatine Monohydrate Pure Powder</h3>
                     <p class="hs-product-desc">Micronized creatine monohydrate to support strength output, power performance, and recovery between training sessions.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 285.000</span><button type="button" class="btn-more-info" onclick="openProductModal('sport-creatine')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 285.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('sport-creatine')">More Info</button></div>
                 </article>
             </div>
         </section>
@@ -348,21 +347,21 @@
                     <img src="Assets/images/routine_diabetes.png" alt="Nature Made Diabetes Health Pack" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Nature Made Diabetes Health Pack</h3>
                     <p class="hs-product-desc">Coordinated supplement pack with key nutrients to support glucose metabolism and daily diabetes wellness management.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 385.000</span><button type="button" class="btn-more-info" onclick="openProductModal('routine-diabetes')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 385.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('routine-diabetes')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge hs-badge--rec">Recommended</span>
                     <img src="Assets/images/routine_bp.png" alt="BPH Blood Pressure Health" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>BPH Blood Pressure Health</h3>
                     <p class="hs-product-desc">Herbal and mineral formula designed to support healthy blood pressure levels as part of physician-guided cardiovascular care.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 298.000</span><button type="button" class="btn-more-info" onclick="openProductModal('routine-bp')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 298.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('routine-bp')">More Info</button></div>
                 </article>
                 <article class="hs-product-card">
                     <span class="hs-badge">Popular</span>
                     <img src="Assets/images/routine_cholesterol.png" alt="Choles-T Cholesterol Support" class="product-img" style="border: 2px dashed #ef4444; width: 100%; height: 220px; object-fit: cover; border-radius: 12px; margin-bottom: 15px;">
                     <h3>Choles-T Cholesterol Support</h3>
                     <p class="hs-product-desc">Plant sterol and fiber blend to help maintain healthy cholesterol levels alongside diet and lifestyle modifications.</p>
-                    <div class="hs-product-footer"><span class="hs-price">Rp 265.000</span><button type="button" class="btn-more-info" onclick="openProductModal('routine-cholesterol')">More Info</button></div>
+                    <div class="hs-product-footer"><span class="hs-price">Rp 265.000</span><button type="button" class="btn-more-info" onclick="guardedProductModal('routine-cholesterol')">More Info</button></div>
                 </article>
             </div>
         </section>
@@ -404,7 +403,6 @@
                 <h4>Platform</h4>
                 <ul>
                     <li><a href="index.html">Home</a></li>
-                    <li><a href="dashboard.html">Dashboard</a></li>
                     <li><a href="health-store.html">Health Store</a></li>
                     <li><a href="gfit.html">Gfit</a></li>
                 </ul>
@@ -432,6 +430,17 @@
     </footer>
 
     <script src="script/script.js"></script>
+    <script>
+    const isLoggedInStore = localStorage.getItem("isLoggedIn");
+    const navGuestStore = document.getElementById("nav-guest-store");
+    const navUserStore  = document.getElementById("nav-user-store");
+    if (isLoggedInStore) {
+        navGuestStore.style.display = "none";
+        navUserStore.style.display  = "flex";
+        const email = localStorage.getItem("userEmail");
+        if (email) document.getElementById("greetUserStore").textContent = "Hello, " + email.split("@")[0] + "!";
+    }
+</script>
     <script>
         const email = localStorage.getItem("userEmail");
         if (email) {
