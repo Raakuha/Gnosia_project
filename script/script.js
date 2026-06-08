@@ -261,62 +261,96 @@ async function handleSearch() {
         if (!response.ok) throw new Error(`Server error: ${response.status}`);
         const data = await response.json();
         const top1 = data.top_predictions[0];
+        const allPreds = data.top_predictions;
 
-        const othersHTML = data.top_predictions.slice(1).map(p => `
-            <div style="display:flex; justify-content:space-between; align-items:center;
-                padding:10px 0; border-top:1px solid #f1f5f9;">
-                <span style="font-size:0.88rem; color:#374151;">${p.disease}</span>
-                <span style="font-size:0.88rem; font-weight:700; color:#6b7280;">${p.confidence}%</span>
-            </div>`).join('');
+        // ── Normalisasi Top 3 ──
+        const totalConf = allPreds.reduce((sum, p) => sum + p.confidence, 0);
+        const normalized = allPreds.map(p => ({
+            disease: p.disease,
+            raw: p.confidence,
+            norm: ((p.confidence / totalConf) * 100).toFixed(1)
+        }));
+
+        // ── Builder panel kiri (dipanggil saat toggle) ──
+        function buildLeftPanel(useNorm) {
+            const conf  = useNorm ? normalized[0].norm : normalized[0].raw;
+            const barW  = Math.min(conf, 100);
+            const othersRows = normalized.slice(1).map(p => `
+                <div style="display:flex; justify-content:space-between; align-items:center;
+                    padding:10px 0; border-top:1px solid #f1f5f9;">
+                    <span style="font-size:0.88rem; color:#374151;">${p.disease}</span>
+                    <span style="font-size:0.88rem; font-weight:700; color:#6b7280;">
+                        ${useNorm ? p.norm : p.raw}%
+                    </span>
+                </div>`).join('');
+            const toggleLabel = useNorm ? '↩ Show Raw %' : '🔄 Normalize to Top 3';
+            const noteText = useNorm
+                ? `<span style="font-size:0.7rem;color:#6b7280;display:block;margin-top:5px;font-style:italic;">Dinormalisasi dari Top 3 (total = 100%)</span>`
+                : `<span style="font-size:0.7rem;color:#6b7280;display:block;margin-top:5px;font-style:italic;">Probabilitas dari 41 kelas penyakit</span>`;
+
+            return `
+                <p style="font-size:0.7rem;font-weight:700;letter-spacing:0.08em;
+                    color:#94a3b8;margin-bottom:10px;text-transform:uppercase;">AI Diagnosis Result</p>
+
+                <button onclick="_toggleNorm()" style="
+                    padding:5px 12px;border-radius:20px;border:1.5px solid #3b82f6;
+                    background:#eff6ff;color:#3b82f6;font-size:0.72rem;font-weight:700;
+                    font-family:inherit;cursor:pointer;margin-bottom:14px;transition:all 0.2s;"
+                    onmouseover="this.style.background='#dbeafe'"
+                    onmouseout="this.style.background='#eff6ff'">
+                    ${toggleLabel}
+                </button>
+
+                <div style="margin-bottom:16px;">
+                    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+                        <span style="font-size:1.25rem;font-weight:800;color:#0f172a;">${top1.disease}</span>
+                        <span style="font-size:1rem;font-weight:700;color:#3b82f6;">${conf}%</span>
+                    </div>
+                    <div style="width:100%;height:7px;background:#e2e8f0;border-radius:10px;overflow:hidden;">
+                        <div style="width:${barW}%;height:100%;background:#3b82f6;border-radius:10px;transition:width 0.6s ease;"></div>
+                    </div>
+                    ${noteText}
+                </div>
+
+                <p style="font-size:0.7rem;font-weight:700;letter-spacing:0.07em;
+                    color:#94a3b8;text-transform:uppercase;margin-bottom:4px;">Other Possibilities</p>
+                ${othersRows}
+
+                <div style="background:#fffbeb;border:1px solid #fde68a;border-radius:10px;
+                    padding:12px 14px;margin-top:16px;display:flex;gap:10px;align-items:flex-start;">
+                    <span style="font-size:1rem;flex-shrink:0;">⚠️</span>
+                    <p style="font-size:0.78rem;color:#92400e;line-height:1.6;margin:0;">
+                        This is an AI prediction, not a medical diagnosis. Please consult a qualified doctor for professional advice.
+                    </p>
+                </div>
+
+                <button onclick="saveResultAsPDF()" style="
+                    width:100%;padding:12px;border-radius:10px;border:2px solid #3b82f6;
+                    background:white;color:#3b82f6;font-size:0.9rem;font-weight:700;
+                    font-family:inherit;cursor:pointer;margin-top:14px;transition:all 0.2s;"
+                    onmouseover="this.style.background='#eff6ff'"
+                    onmouseout="this.style.background='white'">
+                    Save Result
+                </button>`;
+        }
+
+        // ── Toggle state ──
+        let _useNorm = false;
+        window._toggleNorm = function() {
+            _useNorm = !_useNorm;
+            document.getElementById('leftPanel').innerHTML = buildLeftPanel(_useNorm);
+        };
 
         // ── Side-by-side layout ──
         resultDiv.innerHTML = `
-            <div id="resultWrapper" style="display:flex; gap:16px; margin-top:18px; align-items:flex-start; text-align:left; width:100%;">
-
-                <!-- Left: Prediction -->
-                <div style="flex:1; min-width:0; background:white; border-radius:14px;
-                    border-left:4px solid #3b82f6; box-shadow:0 4px 20px rgba(0,0,0,0.08); padding:22px;">
-
-                    <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.08em;
-                        color:#94a3b8; margin-bottom:14px; text-transform:uppercase;">AI Diagnosis Result</p>
-
-                    <div style="margin-bottom:16px;">
-                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-                            <span style="font-size:1.25rem; font-weight:800; color:#0f172a;">${top1.disease}</span>
-                            <span style="font-size:1rem; font-weight:700; color:#3b82f6;">${top1.confidence}%</span>
-                        </div>
-                        <div style="width:100%; height:7px; background:#e2e8f0; border-radius:10px; overflow:hidden;">
-                            <div style="width:${Math.min(top1.confidence,100)}%; height:100%;
-                                background:#3b82f6; border-radius:10px; transition:width 1s ease;"></div>
-                        </div>
-                    </div>
-
-                    <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.07em;
-                        color:#94a3b8; text-transform:uppercase; margin-bottom:4px;">Other Possibilities</p>
-                    ${othersHTML}
-
-                    <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px;
-                        padding:12px 14px; margin-top:16px; display:flex; gap:10px; align-items:flex-start;">
-                        <span style="font-size:1rem; flex-shrink:0;">⚠️</span>
-                        <p style="font-size:0.78rem; color:#92400e; line-height:1.6; margin:0;">
-                            This is an AI prediction, not a medical diagnosis. Please consult a qualified doctor for professional advice.
-                        </p>
-                    </div>
-
-                    <button onclick="saveResultAsPDF()" style="
-                        width:100%; padding:12px; border-radius:10px; border:2px solid #3b82f6;
-                        background:white; color:#3b82f6; font-size:0.9rem; font-weight:700;
-                        font-family:inherit; cursor:pointer; margin-top:14px; transition:all 0.2s;"
-                        onmouseover="this.style.background='#eff6ff'"
-                        onmouseout="this.style.background='white'">
-                        Save Result
-                    </button>
+            <div id="resultWrapper" style="display:flex;gap:16px;margin-top:18px;align-items:flex-start;text-align:left;width:100%;">
+                <div id="leftPanel" style="flex:1;min-width:0;background:white;border-radius:14px;
+                    border-left:4px solid #3b82f6;box-shadow:0 4px 20px rgba(0,0,0,0.08);padding:22px;">
+                    ${buildLeftPanel(false)}
                 </div>
-
-                <!-- Right: Recommendation (loaded async) -->
-                <div id="recPanel" style="flex:1.05; min-width:0; background:white; border-radius:14px;
-                    border-left:4px solid #f59e0b; box-shadow:0 4px 20px rgba(0,0,0,0.08); padding:22px;">
-                    <p style="color:#94a3b8; font-size:0.85rem; animation:pulse 1.5s infinite;">
+                <div id="recPanel" style="flex:1.05;min-width:0;background:white;border-radius:14px;
+                    border-left:4px solid #f59e0b;box-shadow:0 4px 20px rgba(0,0,0,0.08);padding:22px;">
+                    <p style="color:#94a3b8;font-size:0.85rem;animation:pulse 1.5s infinite;">
                         Loading disease info...</p>
                 </div>
             </div>`;
