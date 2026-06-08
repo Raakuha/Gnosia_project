@@ -576,6 +576,57 @@ const PRODUCT_DATA = {
   }
 };
 
+// ── AUTH-GATED wrappers ──────────────────────────────────────────
+function guardedProductModal(productId) {
+    if (!localStorage.getItem("isLoggedIn")) {
+        localStorage.setItem("redirectAfterLogin", "health-store.html");
+        // Tampilkan mini-prompt dulu biar UX lebih smooth
+        const overlay = document.createElement("div");
+        overlay.id = "loginPromptOverlay";
+        overlay.style.cssText = "position:fixed;inset:0;background:rgba(15,23,42,0.55);z-index:9998;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.2s ease;";
+        overlay.innerHTML = `
+            <div style="background:white;border-radius:20px;padding:36px 32px;max-width:380px;width:90%;text-align:center;box-shadow:0 24px 64px rgba(15,23,42,0.18);animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);">
+                <div style="width:56px;height:56px;border-radius:16px;background:#eff6ff;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:1.5rem;">🔒</div>
+                <h3 style="font-size:1.2rem;font-weight:700;color:#0f172a;margin-bottom:10px;">Login Required</h3>
+                <p style="font-size:0.88rem;color:#64748b;line-height:1.6;margin-bottom:24px;">Sign in to view full product details, ingredients, and health recommendations.</p>
+                <div style="display:flex;gap:10px;">
+                    <button onclick="document.getElementById('loginPromptOverlay').remove()" style="flex:1;padding:11px;border:1.5px solid #e2e8f0;border-radius:10px;background:white;cursor:pointer;font-size:0.88rem;font-weight:600;color:#374151;font-family:inherit;">Cancel</button>
+                    <a href="loqin.html" style="flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#3b82f6,#2563eb);color:white;font-size:0.88rem;font-weight:700;text-decoration:none;display:flex;align-items:center;justify-content:center;">Sign In</a>
+                </div>
+                <p style="margin-top:14px;font-size:0.78rem;color:#94a3b8;">No account yet? <a href="register.html" style="color:#3b82f6;font-weight:600;text-decoration:none;">Register for free →</a></p>
+            </div>`;
+        overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
+        document.body.appendChild(overlay);
+        return;
+    }
+    openProductModal(productId);
+}
+
+function guardedGfitNav(event, page) {
+    event.preventDefault();
+    if (localStorage.getItem("isLoggedIn")) {
+        window.location.href = page;
+    } else {
+        localStorage.setItem("redirectAfterLogin", page);
+        const overlay = document.createElement("div");
+        overlay.id = "loginPromptOverlay";
+        overlay.style.cssText = "position:fixed;inset:0;background:rgba(15,23,42,0.55);z-index:9998;display:flex;align-items:center;justify-content:center;animation:fadeIn 0.2s ease;";
+        overlay.innerHTML = `
+            <div style="background:white;border-radius:20px;padding:36px 32px;max-width:380px;width:90%;text-align:center;box-shadow:0 24px 64px rgba(15,23,42,0.18);animation:slideUp 0.3s cubic-bezier(0.34,1.56,0.64,1);">
+                <div style="width:56px;height:56px;border-radius:16px;background:#f0fdf4;display:flex;align-items:center;justify-content:center;margin:0 auto 18px;font-size:1.5rem;">🌿</div>
+                <h3 style="font-size:1.2rem;font-weight:700;color:#0f172a;margin-bottom:10px;">Members Only</h3>
+                <p style="font-size:0.88rem;color:#64748b;line-height:1.6;margin-bottom:24px;">Sign in to access full workout guides, meal plans, and meditation sessions.</p>
+                <div style="display:flex;gap:10px;">
+                    <button onclick="document.getElementById('loginPromptOverlay').remove()" style="flex:1;padding:11px;border:1.5px solid #e2e8f0;border-radius:10px;background:white;cursor:pointer;font-size:0.88rem;font-weight:600;color:#374151;font-family:inherit;">Cancel</button>
+                    <a href="loqin.html" style="flex:1;padding:11px;border-radius:10px;background:linear-gradient(135deg,#10b981,#059669);color:white;font-size:0.88rem;font-weight:700;text-decoration:none;display:flex;align-items:center;justify-content:center;">Sign In</a>
+                </div>
+                <p style="margin-top:14px;font-size:0.78rem;color:#94a3b8;">No account yet? <a href="register.html" style="color:#10b981;font-weight:600;text-decoration:none;">Register for free →</a></p>
+            </div>`;
+        overlay.addEventListener("click", (e) => { if (e.target === overlay) overlay.remove(); });
+        document.body.appendChild(overlay);
+    }
+}
+
 function openProductModal(id) {
   const p = PRODUCT_DATA[id];
   if (!p) return;
@@ -611,35 +662,3 @@ document.addEventListener('keydown', e => {
     if (productModal && productModal.style.display === 'flex') closeProductModal(null);
   }
 });
-
-// ─────────────────────────────────────────────
-// GUARDED NAVIGATION — Cek login sebelum akses fitur
-// ─────────────────────────────────────────────
-
-// Health Store: More Info button butuh login
-function guardedProductModal(productId) {
-    if (!localStorage.getItem("isLoggedIn")) {
-        localStorage.setItem("redirectAfterLogin", "health-store.html");
-        window.location.href = "loqin.html";
-        return;
-    }
-    openProductModal(productId);
-}
-
-// Gfit: Read Guide / See Recipes / Start Session butuh login
-function guardedGfitNav(event, page) {
-    event.preventDefault();
-    if (!localStorage.getItem("isLoggedIn")) {
-        localStorage.setItem("redirectAfterLogin", page);
-        window.location.href = "loqin.html";
-        return;
-    }
-    window.location.href = page;
-}
-
-// Logout handler
-function handleLogout() {
-    localStorage.removeItem("isLoggedIn");
-    localStorage.removeItem("userEmail");
-    window.location.href = "index.html";
-}

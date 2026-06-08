@@ -15,8 +15,8 @@
             <a href="index.html" style="text-decoration: none; color: var(--primary); font-weight: 600; border-bottom: 2px solid var(--primary); padding-bottom: 2px;">Home</a>
 
             <!-- Link Gfit & Health Store: cek login dulu -->
-            <a href="#" onclick="guardedNav(event, 'gfit.html')" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Gfit</a>
-            <a href="#" onclick="guardedNav(event, 'health-store.html')" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Health Store</a>
+            <a href="gfit.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Gfit</a>
+            <a href="health-store.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Health Store</a>
             
             <!-- Tampil kalau BELUM login -->
             <div id="nav-guest" style="display: flex; gap: 10px; align-items: center;">
@@ -136,16 +136,10 @@
 
     <script src="script/script.js"></script>
     <script>
-        // Fungsi navigasi dengan cek login
+        // Navigasi bebas — siapapun bisa akses gfit & health-store
         function guardedNav(event, page) {
             event.preventDefault();
-            if (localStorage.getItem("isLoggedIn")) {
-                window.location.href = page;
-            } else {
-                // Simpan tujuan, lalu arahkan ke login
-                localStorage.setItem("redirectAfterLogin", page);
-                window.location.href = "loqin.html";
-            }
+            window.location.href = page;
         }
 
         // -- Analyze guard: harus login dulu --

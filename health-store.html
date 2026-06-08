@@ -148,7 +148,7 @@
             <a href="gfit.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Gfit</a>
             <a href="health-store.html" style="text-decoration: none; color: var(--primary); font-weight: 600; border-bottom: 2px solid var(--primary); padding-bottom: 2px;">Health Store</a>
 
-           <a href="Chat.html" style="text-decoration: none; color: var(--text-dark); font-weight: 600;">Chat</a>
+            <span style="font-weight: 600; margin-left: 10px;" id="greetUserStore">Hello, User!</span>
             <button onclick="handleLogout()" class="btn btn-outline" style="padding: 8px 15px; font-size: 0.8rem;">Log Out</button>
             <a href="profile.html" class="nav-profile-btn" title="Profile">
     <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" fill="currentColor" viewBox="0 0 24 24">
@@ -430,17 +430,6 @@
     </footer>
 
     <script src="script/script.js"></script>
-    <script>
-    const isLoggedInStore = localStorage.getItem("isLoggedIn");
-    const navGuestStore = document.getElementById("nav-guest-store");
-    const navUserStore  = document.getElementById("nav-user-store");
-    if (isLoggedInStore) {
-        navGuestStore.style.display = "none";
-        navUserStore.style.display  = "flex";
-        const email = localStorage.getItem("userEmail");
-        if (email) document.getElementById("greetUserStore").textContent = "Hello, " + email.split("@")[0] + "!";
-    }
-</script>
     <script>
         const email = localStorage.getItem("userEmail");
         if (email) {
