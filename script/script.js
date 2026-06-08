@@ -226,8 +226,12 @@ function applySymptoms() {
 // ─────────────────────────────────────────────
 // MAIN SEARCH HANDLER
 // ─────────────────────────────────────────────
+
+// Store last result globally for PDF export
+let _lastResult = null;
+
 async function handleSearch() {
-    // ── AUTH GUARD: harus login sebelum bisa analyze ──
+    // ── AUTH GUARD ──
     if (!localStorage.getItem("isLoggedIn")) {
         localStorage.setItem("redirectAfterLogin", window.location.pathname);
         window.location.href = "loqin.html";
@@ -242,104 +246,311 @@ async function handleSearch() {
         return;
     }
 
-    // Loading state
     resultDiv.innerHTML = `<span style="display:inline-block; animation:pulse 1.5s infinite; color:var(--text-light);">
         Analyzing "<strong>${input}</strong>" using AI...</span>`;
 
-    // Parse input: pisahkan per koma
     const symptoms = input.split(/[,]+/).map(s => s.trim().replace(/\s+/g, '_').toLowerCase()).filter(Boolean);
 
     try {
         const response = await fetch(`${API_URL}/predict`, {
             method: "POST",
             headers: { "Content-Type": "application/json" },
-            body: JSON.stringify({
-                symptoms: symptoms,
-                model: "lr_tfidf",
-                top_n: 3
-            })
+            body: JSON.stringify({ symptoms, model: "lr_tfidf", top_n: 3 })
         });
 
         if (!response.ok) throw new Error(`Server error: ${response.status}`);
         const data = await response.json();
-
-        // Render hasil prediksi
         const top1 = data.top_predictions[0];
+
         const othersHTML = data.top_predictions.slice(1).map(p => `
-            <div style="display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-top:1px solid #f1f5f9;">
-                <span style="font-size:0.85rem; color:var(--text-light);">${p.disease}</span>
-                <span style="font-size:0.85rem; font-weight:600; color:var(--text-light);">${p.confidence}%</span>
-            </div>
-        `).join('');
+            <div style="display:flex; justify-content:space-between; align-items:center;
+                padding:10px 0; border-top:1px solid #f1f5f9;">
+                <span style="font-size:0.88rem; color:#374151;">${p.disease}</span>
+                <span style="font-size:0.88rem; font-weight:700; color:#6b7280;">${p.confidence}%</span>
+            </div>`).join('');
 
+        // ── Side-by-side layout ──
         resultDiv.innerHTML = `
-            <div style="background:white; padding:20px; border-radius:12px; border-left:4px solid var(--primary); box-shadow:var(--shadow); margin-top:15px; text-align:left;">
-                <h4 style="margin-bottom:15px; font-size:1rem; color:var(--text-light);">AI Diagnosis Result</h4>
+            <div id="resultWrapper" style="display:flex; gap:16px; margin-top:18px; align-items:flex-start; text-align:left; width:100%;">
 
-                <div style="margin-bottom:15px;">
-                    <div style="display:flex; justify-content:space-between; font-size:0.85rem; margin-bottom:6px; font-weight:600;">
-                        <span style="color:var(--text-dark); font-size:1rem;">${top1.disease}</span>
-                        <span style="color:var(--primary);">${top1.confidence}%</span>
+                <!-- Left: Prediction -->
+                <div style="flex:1; min-width:0; background:white; border-radius:14px;
+                    border-left:4px solid #3b82f6; box-shadow:0 4px 20px rgba(0,0,0,0.08); padding:22px;">
+
+                    <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.08em;
+                        color:#94a3b8; margin-bottom:14px; text-transform:uppercase;">AI Diagnosis Result</p>
+
+                    <div style="margin-bottom:16px;">
+                        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
+                            <span style="font-size:1.25rem; font-weight:800; color:#0f172a;">${top1.disease}</span>
+                            <span style="font-size:1rem; font-weight:700; color:#3b82f6;">${top1.confidence}%</span>
+                        </div>
+                        <div style="width:100%; height:7px; background:#e2e8f0; border-radius:10px; overflow:hidden;">
+                            <div style="width:${Math.min(top1.confidence,100)}%; height:100%;
+                                background:#3b82f6; border-radius:10px; transition:width 1s ease;"></div>
+                        </div>
                     </div>
-                    <div style="width:100%; height:8px; background:#e2e8f0; border-radius:10px; overflow:hidden;">
-                        <div style="width:${top1.confidence}%; height:100%; background:var(--primary); border-radius:10px; transition:width 1s ease-in-out;"></div>
+
+                    <p style="font-size:0.7rem; font-weight:700; letter-spacing:0.07em;
+                        color:#94a3b8; text-transform:uppercase; margin-bottom:4px;">Other Possibilities</p>
+                    ${othersHTML}
+
+                    <div style="background:#fffbeb; border:1px solid #fde68a; border-radius:10px;
+                        padding:12px 14px; margin-top:16px; display:flex; gap:10px; align-items:flex-start;">
+                        <span style="font-size:1rem; flex-shrink:0;">⚠️</span>
+                        <p style="font-size:0.78rem; color:#92400e; line-height:1.6; margin:0;">
+                            This is an AI prediction, not a medical diagnosis. Please consult a qualified doctor for professional advice.
+                        </p>
                     </div>
+
+                    <button onclick="saveResultAsPDF()" style="
+                        width:100%; padding:12px; border-radius:10px; border:2px solid #3b82f6;
+                        background:white; color:#3b82f6; font-size:0.9rem; font-weight:700;
+                        font-family:inherit; cursor:pointer; margin-top:14px; transition:all 0.2s;"
+                        onmouseover="this.style.background='#eff6ff'"
+                        onmouseout="this.style.background='white'">
+                        Save Result
+                    </button>
                 </div>
 
-                <p style="font-size:0.8rem; color:var(--text-light); font-weight:600; margin-bottom:5px;">OTHER POSSIBILITIES</p>
-                ${othersHTML}
+                <!-- Right: Recommendation (loaded async) -->
+                <div id="recPanel" style="flex:1.05; min-width:0; background:white; border-radius:14px;
+                    border-left:4px solid #f59e0b; box-shadow:0 4px 20px rgba(0,0,0,0.08); padding:22px;">
+                    <p style="color:#94a3b8; font-size:0.85rem; animation:pulse 1.5s infinite;">
+                        Loading disease info...</p>
+                </div>
+            </div>`;
 
-                <p style="font-size:0.75rem; color:#94a3b8; margin-top:15px;">
-                    ⚠️ This is an AI prediction, not a medical diagnosis. Please consult a doctor.
-                </p>
-            </div>
-        `;
         resultDiv.classList.add('animate-up');
 
-        // ── Fetch rekomendasi (top1 sudah tersedia di sini) ──
+        // ── Fetch recommendation → fill right panel ──
         try {
             const recRes = await fetch(`${API_URL}/recommend/${encodeURIComponent(top1.disease)}`);
             if (recRes.ok) {
                 const rec = await recRes.json();
-                const precHTML = rec.precautions.map(p => `<li>${p}</li>`).join('');
-                const severityColor = rec.severity_label === 'Mild'     ? '#10b981'
-                                    : rec.severity_label === 'Moderate' ? '#f59e0b'
-                                    : '#ef4444';
+                _lastResult = { top1, others: data.top_predictions.slice(1), rec, symptoms };
 
-                resultDiv.innerHTML += `
-                    <div style="background:white; padding:20px; border-radius:12px;
-                        border-left:4px solid ${severityColor}; box-shadow:var(--shadow);
-                        margin-top:12px; text-align:left;">
-                        <h4 style="margin-bottom:10px; font-size:1rem; color:var(--text-dark);">
-                            📋 About ${rec.disease}
-                        </h4>
-                        <p style="font-size:0.85rem; color:var(--text-light); margin-bottom:12px;">
-                            ${rec.description}
-                        </p>
-                        <span style="background:${severityColor}20; color:${severityColor};
-                            padding:3px 10px; border-radius:20px; font-size:0.78rem; font-weight:600;">
-                            ${rec.severity_label} Severity
-                        </span>
-                        <p style="font-size:0.82rem; font-weight:600; color:var(--text-dark);
-                            margin:12px 0 6px;">🛡️ Precautions:</p>
-                        <ul style="margin-left:18px; font-size:0.82rem; color:var(--text-light); line-height:1.8;">
-                            ${precHTML}
-                        </ul>
-                    </div>
-                `;
+                const sc = rec.severity_label === 'Mild'     ? '#10b981'
+                         : rec.severity_label === 'Moderate' ? '#f59e0b' : '#ef4444';
+
+                const precHTML = rec.precautions.map(p =>
+                    `<div style="display:flex; gap:8px; align-items:flex-start; margin-bottom:8px;">
+                        <span style="color:#3b82f6; font-size:0.8rem; margin-top:2px; flex-shrink:0;">●</span>
+                        <span style="font-size:0.85rem; color:#374151;">${p}</span>
+                    </div>`).join('');
+
+                document.getElementById('recPanel').innerHTML = `
+                    <h4 style="font-size:1.1rem; font-weight:800; color:#0f172a; margin-bottom:12px;">
+                        About ${rec.disease}
+                    </h4>
+                    <p style="font-size:0.84rem; color:#6b7280; line-height:1.75; margin-bottom:14px;">
+                        ${rec.description}
+                    </p>
+                    <span style="display:inline-block; background:${sc}18; color:${sc};
+                        padding:5px 14px; border-radius:20px; font-size:0.8rem; font-weight:700; margin-bottom:16px;">
+                        ${rec.severity_label} Severity
+                    </span>
+                    <div style="border-left:3px solid #3b82f6; padding-left:14px;">
+                        <p style="font-size:0.85rem; font-weight:700; color:#0f172a; margin-bottom:10px;">Precautions:</p>
+                        ${precHTML}
+                    </div>`;
             }
         } catch (recErr) {
-            // Rekomendasi gagal — prediksi utama tetap tampil normal
+            _lastResult = { top1, others: data.top_predictions.slice(1), rec: null, symptoms };
+            document.getElementById('recPanel').innerHTML =
+                `<p style="font-size:0.85rem; color:#94a3b8;">Disease details not available.</p>`;
             console.warn('Recommendation not available:', recErr.message);
         }
 
     } catch (err) {
         resultDiv.innerHTML = `
-            <div style="background:#fef2f2; padding:15px; border-radius:12px; border-left:4px solid #ef4444; margin-top:15px;">
+            <div style="background:#fef2f2; padding:15px; border-radius:12px;
+                border-left:4px solid #ef4444; margin-top:15px;">
                 <p style="color:#ef4444; font-size:0.9rem;">❌ Could not connect to AI server. Make sure the backend is running.</p>
                 <p style="color:#94a3b8; font-size:0.8rem; margin-top:5px;">Error: ${err.message}</p>
             </div>`;
     }
+}
+
+// ─────────────────────────────────────────────
+// SAVE RESULT AS PDF
+// ─────────────────────────────────────────────
+function saveResultAsPDF() {
+    if (!_lastResult) { alert('No result to save yet.'); return; }
+    if (!window.jspdf) {
+        const s = document.createElement('script');
+        s.src = 'https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js';
+        s.onload = _generatePDF;
+        document.head.appendChild(s);
+    } else {
+        _generatePDF();
+    }
+}
+
+function _generatePDF() {
+    const { jsPDF } = window.jspdf;
+    const doc = new jsPDF({ unit: 'mm', format: 'a4' });
+    const { top1, others, rec, symptoms } = _lastResult;
+    const now = new Date();
+    const dateStr = now.toLocaleDateString('id-ID', { day:'2-digit', month:'long', year:'numeric' });
+    const timeStr = now.toLocaleTimeString('id-ID', { hour:'2-digit', minute:'2-digit' });
+    const email = localStorage.getItem('userEmail') || '—';
+    const W = 210, M = 18;
+
+    // Header bar
+    doc.setFillColor(37, 99, 235);
+    doc.rect(0, 0, W, 28, 'F');
+    doc.setTextColor(255, 255, 255);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(18);
+    doc.text('Gnosia', M, 12);
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal');
+    doc.text('AI-Powered Health Triage Platform', M, 19);
+    doc.text(`Generated: ${dateStr}  ${timeStr}`, W - M, 12, { align: 'right' });
+    doc.text(`User: ${email}`, W - M, 19, { align: 'right' });
+
+    // Title
+    doc.setTextColor(15, 23, 42);
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(14);
+    doc.text('AI Diagnosis Result', M, 40);
+    doc.setDrawColor(59, 130, 246);
+    doc.setLineWidth(0.8);
+    doc.line(M, 43, W - M, 43);
+
+    // Symptoms
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(8.5);
+    doc.setTextColor(100, 116, 139);
+    doc.text('Symptoms:', M, 51);
+    doc.setTextColor(15, 23, 42);
+    const sympText = doc.splitTextToSize(
+        symptoms.map(s => s.replace(/_/g, ' ')).join(', '), W - M * 2 - 28);
+    doc.text(sympText, M + 28, 51);
+
+    let y = 51 + sympText.length * 5 + 6;
+
+    // Top prediction box
+    doc.setFillColor(239, 246, 255);
+    doc.roundedRect(M, y, W - M * 2, 24, 3, 3, 'F');
+    doc.setFillColor(59, 130, 246);
+    doc.roundedRect(M, y, 3, 24, 1, 1, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(100, 116, 139);
+    doc.text('TOP PREDICTION', M + 8, y + 7);
+    doc.setFontSize(13);
+    doc.setTextColor(15, 23, 42);
+    doc.text(top1.disease, M + 8, y + 17);
+    doc.setTextColor(37, 99, 235);
+    doc.setFontSize(12);
+    doc.text(`${top1.confidence}%`, W - M - 5, y + 17, { align: 'right' });
+
+    // Progress bar
+    y += 26;
+    doc.setFillColor(226, 232, 240);
+    doc.roundedRect(M, y, W - M * 2, 4, 2, 2, 'F');
+    doc.setFillColor(59, 130, 246);
+    const barW = ((W - M * 2) * Math.min(top1.confidence, 100)) / 100;
+    doc.roundedRect(M, y, barW, 4, 2, 2, 'F');
+
+    y += 12;
+
+    // Other possibilities
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(100, 116, 139);
+    doc.text('OTHER POSSIBILITIES', M, y);
+    y += 7;
+
+    others.forEach(p => {
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(10);
+        doc.setTextColor(55, 65, 81);
+        doc.text(p.disease, M, y);
+        doc.setTextColor(107, 114, 128);
+        doc.text(`${p.confidence}%`, W - M, y, { align: 'right' });
+        doc.setDrawColor(241, 245, 249);
+        doc.setLineWidth(0.3);
+        doc.line(M, y + 2.5, W - M, y + 2.5);
+        y += 9;
+    });
+
+    y += 5;
+
+    // Disease info
+    if (rec) {
+        const sc = rec.severity_label === 'Mild'     ? [16, 185, 129]
+                 : rec.severity_label === 'Moderate' ? [245, 158, 11] : [239, 68, 68];
+
+        doc.setDrawColor(...sc);
+        doc.setLineWidth(0.7);
+        doc.line(M, y, W - M, y);
+        y += 8;
+
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(12);
+        doc.setTextColor(15, 23, 42);
+        doc.text(`About ${rec.disease}`, M, y);
+        y += 8;
+
+        doc.setFont('helvetica', 'normal');
+        doc.setFontSize(9);
+        doc.setTextColor(107, 114, 128);
+        const descLines = doc.splitTextToSize(rec.description, W - M * 2);
+        doc.text(descLines, M, y);
+        y += descLines.length * 5 + 6;
+
+        // Severity badge
+        doc.setFillColor(sc[0], sc[1], sc[2]);
+        doc.roundedRect(M, y - 4, 40, 8, 3, 3, 'F');
+        doc.setTextColor(255, 255, 255);
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(8);
+        doc.text(`${rec.severity_label} Severity`, M + 20, y + 1, { align: 'center' });
+        y += 12;
+
+        // Precautions
+        doc.setFont('helvetica', 'bold');
+        doc.setFontSize(10);
+        doc.setTextColor(15, 23, 42);
+        doc.text('Precautions:', M, y);
+        y += 7;
+
+        rec.precautions.forEach(p => {
+            doc.setFillColor(59, 130, 246);
+            doc.circle(M + 2, y - 1.5, 1.2, 'F');
+            doc.setFont('helvetica', 'normal');
+            doc.setFontSize(9);
+            doc.setTextColor(55, 65, 81);
+            const lines = doc.splitTextToSize(p, W - M * 2 - 8);
+            doc.text(lines, M + 7, y);
+            y += lines.length * 5 + 2;
+        });
+    }
+
+    y += 6;
+
+    // Disclaimer
+    doc.setFillColor(255, 251, 235);
+    doc.roundedRect(M, y, W - M * 2, 16, 3, 3, 'F');
+    doc.setFont('helvetica', 'bold');
+    doc.setFontSize(8);
+    doc.setTextColor(146, 64, 14);
+    doc.text('Disclaimer', M + 5, y + 6);
+    doc.setFont('helvetica', 'normal');
+    const disc = doc.splitTextToSize(
+        'This result is AI-generated and NOT a substitute for professional medical diagnosis. Always consult a licensed doctor.',
+        W - M * 2 - 10);
+    doc.text(disc, M + 5, y + 11);
+
+    // Footer
+    doc.setFontSize(7.5);
+    doc.setTextColor(148, 163, 184);
+    doc.text('© 2026 Gnosia Team  |  Not for clinical use', W / 2, 290, { align: 'center' });
+
+    doc.save(`Gnosia_${top1.disease.replace(/\s/g, '_')}_${now.getTime()}.pdf`);
 }
 
 // ─────────────────────────────────────────────
